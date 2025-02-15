@@ -30,7 +30,7 @@
                             <PencilIcon class="w-3 h-3  text-black"/>
                             <span class="text-sm text-black">Edit Project</span>
                         </li>
-                        <li class="cursor-pointer flex gap-4 items-center my-1 hover:bg-red-300 p-2" @click="deleteSwitch">
+                        <li class="cursor-pointer flex gap-4 items-center my-1 hover:bg-red-300 hover:rounded-md duration-300 p-2" @click="deleteSwitch">
                             <TrashIcon class="w-3 h-3   text-red-600 "/>
                             <span class="text-sm text-red-600 ">Delete Project</span>
                         </li>

@@ -2,26 +2,28 @@
     <!-- The Modal -->
     <div id="myModal" class="modal">
         <!-- Modal content -->
-        <div class="modal-content">
-            <span class="close" @click="bye">&times;</span>
+        <div class="modal-content w-2/3 rounded-lg">
+            <div class="w-full flex flex-row-reverse">
+                <span class="text-2xl cursor-pointer hover:text-red-500 duration-300" @click="bye">&times;</span>
+            </div>
             <form method="post" id="project-form" @submit.prevent="submitForm" v-if="projectForm" class="flex flex-col">
-                <div class="flex flex-col">
+                <div class="flex flex-col my-1">
                     <label for="name">Name</label>
-                    <input type="text" v-model="projectData.Name" name="name" placeholder="Name" class="border border-[#490a47]">
+                    <input type="text" v-model="projectData.Name" name="name" placeholder="Name" class="border border-[#490a47] rounded-sm p-1">
                 </div>
-                <div class="flex flex-col">
+                <div class="flex flex-col my-1">
                     <label for="description">description</label>
-                    <textarea v-model="projectData.Description" name="description" placeholder="description" class="border border-[#490a47]"/>
+                    <textarea v-model="projectData.Description" name="description" placeholder="description" class="border border-[#490a47] rounded-sm p-1"/>
                 </div>
-                <div class="flex flex-col">
+                <div class="flex flex-col my-1">
                     <label for="name">Deadline</label>
-                    <input type="datetime-local" v-model="projectData.EstimatedEndDate" name="EstimatedEndDate" class="border border-[#490a47]">
+                    <input type="datetime-local" v-model="projectData.EstimatedEndDate" name="EstimatedEndDate" class="border border-[#490a47] rounded-sm p-1">
                 </div>
-                <div class="flex flex-col">
+                <div class="flex flex-col my-1">
                     <label for="tags">Tags:</label>
-                    <input type="text" v-model="projectData.Tags" name="tags" placeholder="comma separated tags" class="border border-[#490a47]">
+                    <input type="text" v-model="projectData.Tags" name="tags" placeholder="comma separated tags" class="border border-[#490a47] rounded-sm p-1">
                 </div>
-                <input type="submit" :value="edit ?  'update' : 'create'" class="bg-[#490a47] text-white font-medium p-3" >
+                <input type="submit" :value="edit ?  'update' : 'create'" class="mt-3 bg-[#490a47] text-white font-medium p-3 cursor-pointer" >
             </form>
         </div>
     </div> 
@@ -59,7 +61,7 @@ const emit = defineEmits(['modal-off', 'project-created', 'project-updated']);
 
 const projectForm = ref(true);
 
-const projectData = ref({
+const nullProjFields = {
             ID:null,
             CreatedAt: null,
             UpdatedAt: null,
@@ -72,10 +74,14 @@ const projectData = ref({
             Description:null,
             Objectives:[],
             Notes:[]
-})
+}
+
+const projectData = ref(nullProjFields)
 
 const bye = () => {
+    // projectData.value = nullProjFields
     emit("modal-off");
+    console.log(projectData.value)
 };
 
 const submitForm = async () => {
@@ -94,16 +100,17 @@ const submitForm = async () => {
         emit("project-created");
     }else{
         data.ID = projectData.value.ID
-        // await updateProject(data);
-        console.log(data)
+        await updateProject(data);
+        // console.log(data)
         emit("project-updated");
     }
 }
 
 onMounted(()=>{
-    console.log(props.edit, props.project)
+    projectData.value = nullProjFields
     if(props.edit){
         projectData.value = props.project
+        projectData.value.EstimatedEndDate = new Date(props.project.EstimatedEndDate).toISOString().substring(0, 16)
     }
 })
 
@@ -130,7 +137,6 @@ onMounted(()=>{
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
     }
 
     /* The Close Button */

@@ -2,7 +2,7 @@
   <div class="home">
     <section class="home__topsection grid grid-cols-3 px-4 mt-4 gap-4">
       <div class="grid col-span-1">
-        <InfoCard v-on:add-project-clicked="toggleProjectForm"/>
+        <InfoCard v-on:add-project-clicked="toggleProjectFormOn"/>
       </div>
       <div class="grid col-span-2">
         <SummaryCard />
@@ -13,7 +13,7 @@
         :edit="projectFormEditMode"
         :project="projectToedit"
         v-if="ProjectFormOn" 
-        @modal-off="toggleProjectForm"
+        @modal-off="toggleProjectFormOff"
         @project-created="handleProjectCreated"
         @project-updated = "handleProjectUpdated"
         />
@@ -77,24 +77,29 @@ const getProjects = async ()=>{
   // projectStore.projects = data
 }
 
-const toggleProjectForm = ()=>{
-  ProjectFormOn.value = !ProjectFormOn.value
+const toggleProjectFormOn = ()=>{
+  ProjectFormOn.value = true
+}
+
+const toggleProjectFormOff = ()=>{
+  projectFormEditMode.value = false;
+  ProjectFormOn.value = false
 }
 
 const openEditForm = (project)=>{
   projectFormEditMode.value = true;
   projectToedit.value = project;
-  toggleProjectForm()
+  toggleProjectFormOn()
 }
 
 
 const handleProjectCreated = async ()=>{
-  toggleProjectForm();
+  toggleProjectFormOff()
   await getProjects()
 }
 
 const handleProjectUpdated = async ()=>{
-  toggleProjectForm();
+  toggleProjectFormOff()
   await getProjects()
 }
 
