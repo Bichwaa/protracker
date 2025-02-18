@@ -9,21 +9,40 @@
             <form method="post" id="project-form" @submit.prevent="submitForm" v-if="projectForm" class="flex flex-col">
                 <div class="flex flex-col my-1">
                     <label for="name">Name</label>
-                    <input type="text" v-model="projectData.Name" name="name" placeholder="Name" class="border border-[#490a47] rounded-sm p-1">
+                    <input 
+                        type="text" 
+                        v-model="projectData.Name" 
+                        name="Name" placeholder="Name" 
+                        class="border border-[#490a47] rounded-sm p-1"
+                        @focus="errors.Name = ''"
+                        >
+                    <span class="text-sm text-red-500" v-if="errors.Name" >{{ errors.Name }}</span>
                 </div>
                 <div class="flex flex-col my-1">
                     <label for="description">description</label>
-                    <textarea v-model="projectData.Description" name="description" placeholder="description" class="border border-[#490a47] rounded-sm p-1"/>
+                    <textarea 
+                        v-model="projectData.Description" 
+                        name="Description" 
+                        placeholder="description" 
+                        class="border border-[#490a47] rounded-sm p-1"
+                        @focus="errors.Description = ''"
+                        />
+                    <span class="text-sm text-red-500" v-if="errors.Description" >{{ errors.Description }}</span>
                 </div>
                 <div class="flex flex-col my-1">
                     <label for="name">Deadline</label>
                     <input type="datetime-local" v-model="projectData.EstimatedEndDate" name="EstimatedEndDate" class="border border-[#490a47] rounded-sm p-1">
+                    <span class="text-sm text-red-500" v-if="errors.EstimatedEndDate" >{{ errors.EstimatedEndDate }}</span>
                 </div>
                 <div class="flex flex-col my-1">
                     <label for="tags">Tags:</label>
-                    <input type="text" v-model="projectData.Tags" name="tags" placeholder="comma separated tags" class="border border-[#490a47] rounded-sm p-1">
+                    <input type="text" v-model="projectData.Tags" name="Tags" placeholder="comma separated tags" class="border border-[#490a47] rounded-sm p-1">
+                    <span class="text-sm text-red-500" v-if="errors.Tags" >{{ errors.Tags }}</span>
                 </div>
-                <input type="submit" :value="edit ?  'update' : 'create'" class="mt-3 bg-[#490a47] text-white font-medium p-3 cursor-pointer" >
+                <button type="submit" class="mt-3 bg-[#490a47] disabled:bg-gray-200 text-white font-medium p-3 cursor-pointer grid place-content-center rounded-md" >
+                    <span v-if="!loading"> {{ edit ?  'update' : 'create' }} </span>
+                    <Loader v-else  class="h-5 w-5"/>
+                </button>
             </form>
         </div>
     </div> 
@@ -31,7 +50,9 @@
 
 <script setup>
 import { ref, defineEmits, onMounted} from 'vue';
+import { z } from "zod";
 import { useProjectController } from "../APIs/project-controller";
+import Loader from './Loader.vue';
 
 const props = defineProps({
     edit: {
@@ -56,6 +77,7 @@ const props = defineProps({
         }
     }
 });
+const loading = ref(false)
 
 const emit = defineEmits(['modal-off', 'project-created', 'project-updated']);
 
@@ -77,14 +99,31 @@ const nullProjFields = {
 }
 
 const projectData = ref(nullProjFields)
+//validation Logic
+const projectschema = z.object({
+            ID:z.number().int().optional(),
+            Name:z.string({message:"project must have name"}).nonempty(),
+            Tags:z.string(),
+            EstimatedEndDate:z.string({message:'Expected date, received nothing'}).datetime().nonempty(), 
+            Description:z.string(),
+})
+
+const errors = ref({
+            Name:"",
+            Tags:"",
+            EstimatedEndDate:"",
+            Description:""
+})
+
+//End validation Logic
 
 const bye = () => {
-    // projectData.value = nullProjFields
     emit("modal-off");
     console.log(projectData.value)
 };
 
 const submitForm = async () => {
+    loading.value = true;
     const { createProject, updateProject } = useProjectController();
     let form = document.getElementById('project-form');
         const formItems = [...form];
@@ -94,11 +133,25 @@ const submitForm = async () => {
         //then turn them into an object
         const data = Object.fromEntries(keyVals);
         // console.log(data)
-        data.EstimatedEndDate = new Date(data.EstimatedEndDate).toJSON()
-    if(!props.edit){
+        data.EstimatedEndDate = new Date(data.EstimatedEndDate).toJSON();
+
+        console.log(data)
+        const validation = projectschema.safeParse(data)
+        if (!validation.success) {
+            console.log('Form data:', validation);
+            // Handle validation errors
+            validation.error.errors.forEach((err) => {
+            errors.value[err.path[0]] = err.message;
+            });
+        } else {
+            // Form is valid, proceed with submission
+            loading.value = false;
+
+        }
+    if(!props.edit && validation.success){
         await createProject(data);
         emit("project-created");
-    }else{
+    }else if(props.edit && validation.success){
         data.ID = projectData.value.ID
         await updateProject(data);
         // console.log(data)

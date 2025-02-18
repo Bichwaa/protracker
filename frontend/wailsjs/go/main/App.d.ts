@@ -10,4 +10,4 @@ export function FetchProject(arg1:number):Promise<models.Project>;
 
 export function FetchProjects():Promise<Array<models.Project>>;
 
-export function UpdateProject(arg1:models.Project):Promise<void>;
+export function UpdateProject(arg1:models.ProjectUpdateDTO):Promise<void>;

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-between px-4 py-2">
+    <div class="flex flex-col gap-4 p-4 mt-4 h-[97vh] bg-gloom rounded-lg">
         <div class="home-wrapper">
             <router-link to="/"> 
             <HomeIcon  class="h-6 w-6 text-black"/>
@@ -9,9 +9,9 @@
             <router-link to="/" v-if="theme=='dark'"> 
             <SunIcon  class="h-6 w-6 text-black"/>
             </router-link>
-            <router-link to="/" v-else> 
+            <!-- <router-link to="/" v-else> 
             <MoonIcon  class="h-6 w-6 text-black"/>
-            </router-link>
+            </router-link> -->
         </div>
     </div>
 </template>
