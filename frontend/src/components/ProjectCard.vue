@@ -51,7 +51,7 @@
         </div>
         <div class="time"><span class="font-semibold">Age:</span> <span> {{timeLapsed.days}} Days | {{timeLapsed.hours}} Hours</span></div>
         <div class="tags my-4">
-           <span> <a class="text-sm bg-gray-200 mx-1 rounded-xl px-2 py-1 cursor-pointer" v-for="tag in tagList" @click="moun">{{tag}}</a></span>
+           <span> <a class="text-sm bg-gray-200 mx-1 rounded-xl px-2 py-1 cursor-pointer" v-for="tag in tagList" @click="tagClicked(tag)">{{tag}}</a></span>
         </div>
         <div class="descrption flex flex-col">
             <span class="font-semibold">Description:</span>
@@ -70,7 +70,10 @@ import Dialog from "./Dialog.vue";
 
     const props = defineProps(['project'])
 
-    const emit = defineEmits(["project-deleted", "edit-clicked"])
+    const emit = defineEmits([
+        "project-deleted", "edit-clicked",
+        "tag-clicked",
+    ])
 
     const showDelete = ref(false)
     
@@ -79,8 +82,8 @@ import Dialog from "./Dialog.vue";
     const menuContainer = ref(null);
     
     
-    const moun = ()=> {
-            console.log(r.value);
+    const tagClicked = (tag)=> {
+            emit("tag-clicked",{tag});
         }
     
     const handleClickOutside = (event)=> {

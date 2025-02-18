@@ -18,7 +18,16 @@
         @project-updated = "handleProjectUpdated"
         />
     </section>
-    <p v-if="loading">...loading</p>
+    <section class="px-4 pt-2" v-if="filters.show">
+      <div class="flex p-1 items-center gap-2">
+        <span class="text-sm font-medium">Filters:</span>
+        <span> <a class="text-sm bg-gray-200 mx-1 rounded-xl px-4  cursor-pointer" v-for="tag in filters.filterTagList">{{tag}}</a></span>
+        <span class="flex items-center cursor-pointer" @click="clearFilters">
+          <span class="text-[1.35rem] text-red-400 mt-[.1rem]">&times;</span>
+          <span class="text-sm text-red-400"> clear</span>
+        </span>
+      </div>
+    </section>
     <section class="grid grid-cols-3 gap-4 p-4">
         <template v-if="projects">
         <ProjectCard
@@ -29,6 +38,7 @@
           v-bind:project="project"
           @project-deleted="getProjects"
           @edit-clicked="openEditForm(project)"
+          @tag-clicked="filterProjects"
         />
         </template>
     </section>
@@ -62,6 +72,11 @@ const projectToedit = ref({
             Notes:[]
         })
 
+const filters = ref({
+  show:false,
+  filterTagList:[]
+})
+
 const projectStore = useProjectStore();
 
 onMounted(()=>{
@@ -75,6 +90,19 @@ const projects = computed(()=>{
 const getProjects = async ()=>{
   const data = await projectStore.getProjects()
   // projectStore.projects = data
+}
+
+const filterProjects = async (data)=>{
+  // data should be an object with the shape {tag: string}
+  filters.value.filterTagList.push(data.tag)
+  filters.value.show = true
+  await projectStore.filterProjectsByTag(data.tag)
+}
+
+const clearFilters = async ()=>{
+  // await getProjects()
+  await projectStore.resetFilters()
+  filters.value = {show:false,filterTagList:[]}
 }
 
 const toggleProjectFormOn = ()=>{
