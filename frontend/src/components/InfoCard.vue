@@ -7,7 +7,7 @@
                 </router-link>
             </div>
 
-            <button class="bg-royal text-white hover:bg-black transition duration-300 rounded-lg px-2 py-0 h-8" @click="addProjectClicked">+ Add Project</button>
+            <button class="bg-royal text-white hover:bg-black transition duration-300 rounded-lg px-2 py-2 text-sm" @click="addProjectClicked">+ Add Project</button>
         </div>
         <div class="info-wrapper flex flex-col gap-2">
             <span class="font-medium text-black">{{ "Bichwaa,"  }}</span>
