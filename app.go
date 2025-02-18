@@ -40,7 +40,7 @@ func (c *App) FetchProjects() ([]models.Project, error) {
 	return controllers.GetProjectsController(&c.db)
 }
 
-func (c *App) UpdateProject(pd models.Project) error {
+func (c *App) UpdateProject(pd models.ProjectUpdateDTO) error {
 	return controllers.UpdateProjectController(&c.db, pd)
 }
 

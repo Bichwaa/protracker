@@ -17,6 +17,16 @@ type Project struct {
 	Notes            []Note      `gorm:"foreignKey:ProjectID;constraint:OnDelete:CASCADE;"`
 }
 
+type ProjectUpdateDTO struct {
+	ID               uint `gorm:"primarykey"`
+	UpdatedAt        time.Time
+	Name             string    `gorm:"not null"`
+	EstimatedEndDate time.Time `gorm:"not null"`
+	Progress         int       `gorm:"not null"`
+	Description      string
+	Tags             string `gorm:"default:'all'"`
+}
+
 type Objective struct {
 	gorm.Model
 	Name             string    `gorm:"not null"`

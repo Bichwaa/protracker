@@ -30,8 +30,17 @@ func GetProjectController(db *gorm.DB, id uint) (models.Project, error) {
 	return projects, nil
 }
 
-func UpdateProjectController(db *gorm.DB, pd models.Project) error {
-	err := models.UpdateProject(db, pd)
+func UpdateProjectController(db *gorm.DB, pd models.ProjectUpdateDTO) error {
+	project := new(models.Project)
+	if er := db.First(&project, pd.ID).Error; er != nil {
+		return er
+	}
+	project.Description = pd.Description
+	project.Name = pd.Name
+	project.Tags = pd.Tags
+	project.EstimatedEndDate = pd.EstimatedEndDate
+
+	err := models.UpdateProject(db, *project)
 	if err != nil {
 		return err
 	}
