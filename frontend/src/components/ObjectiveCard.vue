@@ -1,83 +1,180 @@
 <template>
-    <div class="objective-card">
-        <h4>{{objective.name || "OBJECTIVE NAME"}}</h4>
-        <div class="objective-card__notes">
-            <router-link to="/notes">
-                <img src="../assets/images/notes.png"><span class="note-text">0 Notes</span>
-            </router-link>
+    <div class="bg-gloom p-4 rounded-lg" @click="handleClickOutside">
+        <div class="flex items-center justify-between relative" ref="menuContainer">
+            <h4 class="font-semibold">{{objective.Name || "OBJECTIVE NAME"}}</h4>
+            <bars3-bottom-right-icon class="w-5 h-5 font-semibold stroke-2 cursor-pointer" @click="popupMenu= !popupMenu"/>
+            <div class="popout-menu absolute right-5 top-0 shadow-xl rounded-md w-44 bg-gloom p-2"  v-if="popupMenu" >
+                <ul class="flex flex-col">
+                    <li class="cursor-pointer flex gap-4 items-center my-1 p-2" @click="toggleGoalFormOn">
+                        <PlusIcon class="w-3 h-3  text-black"/>
+                        <span class="text-sm text-black">Add Goal</span>
+                    </li>
+                    <li class="cursor-pointer flex gap-4 items-center my-1 p-2" @click="editProjectClicked">
+                        <PencilIcon class="w-3 h-3  text-black"/>
+                        <span class="text-sm text-black">Edit Objective</span>
+                    </li>
+                    <li class="cursor-pointer flex gap-4 items-center my-1 p-2">
+                        <BookOpenIcon class="w-4 h-4"/>
+                        <span class="text-sm">Objective Notes</span>
+                    </li>
+                    <li class="cursor-pointer flex gap-4 items-center my-1 hover:bg-red-300 hover:rounded-md duration-300 p-2" @click="deleteSwitch">
+                        <TrashIcon class="w-3 h-3   text-red-600 "/>
+                        <span class="text-sm text-red-600 ">Delete Objective</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div>
+            <ObjectiveForm
+            :edit="true"
+            :objective="objective"
+            v-if="ObjectiveFormOn" 
+            @modal-off="toggleObjectiveFormOff"
+            @objective-updated = "handleProjectUpdated"
+            />
+        </div>
+
+        <div>
+            <GoalForm
+            v-if="GoalFormOn" 
+            @modal-off="toggleGoalFormOff"
+            @objective-updated = "handleGoalUpdated"
+            />
+        </div>
+
+        <Dialog 
+            v-if="showDelete"  
+            entity="objective"
+            @cancelled="showDelete=false"
+            @deleted="deleteObjective" 
+        />
+        <div class="progress w-full">
+            <span class="font-semibold">Progress:</span> <span class="font-semibold text-3xl">{{objective.Progress}}%</span>
+            <br>
+            <progress max="100" class="w-[80%]" :value="objective.Progress"></progress>
         </div>
         <div class="objective-card__progress">
-            <span>Progress: {{objective.progress||"0%"}}</span>
+            <span class="font-medium">Overseer: {{objective.Overseer}}</span>
         </div>
-        <div class="objective-card__descrption">
-            {{objective.description}}
+        <div class="objective-card__descrption my-2">
+            <span>Goals: {{ objective.Goals == null? 0 : objective.Goals.length }}</span>
         </div>
-        <div class="objective-card__btns">
-            <button class="btns__edit">EDIT</button>
-            <button class="btns__delete">DELETE</button>
+        <div class="descrption flex flex-col">
+            <span class="font-medu">Description:</span>
+            <div>
+                {{objective.Description}}
+            </div>
         </div>
     </div>
 </template>
 
-<script>
-export default {
-    props:["objective"]
-}
+<script setup>
+import {ref} from 'vue';
+import {Bars3BottomRightIcon, PencilIcon, TrashIcon, BookOpenIcon,PlusIcon} from '@heroicons/vue/24/solid';
+import ObjectiveForm from '../components/ObjectiveForm.vue'
+import GoalForm from '../components/GoalForm.vue'
+import { useObjectiveController } from "../APIs/objective-controller";
+import Dialog from "./Dialog.vue";
+
+const props = defineProps({
+    objective:{
+        type: Object,
+        default: {}
+    }
+})
+
+const emit = defineEmits(['objective-edited','objective-deleted'])
+const showDelete = ref(false)
+const popupMenu = ref(false) 
+const menuContainer = ref(null);
+const ObjectiveFormOn = ref(false)  
+const GoalFormOn = ref(false)
+
+const handleClickOutside = (event)=> {
+      // Check if the click event occurred outside the menu container
+      if (!menuContainer.value.contains(event.target)) {
+        popupMenu.value = false;
+      }
+    }
+
+    const editProjectClicked = ()=>{
+        // 
+        toggleObjectiveFormOn()
+        popupMenu.value = false;
+    }
+
+    const handleProjectUpdated = ()=>{
+        emit("objective-edited")
+        toggleObjectiveFormOff()
+    }
+
+    const deleteObjective = async ()=>{
+        const {deleteObjective} = useObjectiveController();
+        try {
+            await deleteObjective(props.objective.ID);
+            showDelete.value = false;
+            emit('objective-deleted')
+        }catch (e){
+            throw e
+        }
+    }
+
+    const toggleObjectiveFormOn = ()=>{
+        ObjectiveFormOn.value = true
+    }
+
+    const toggleObjectiveFormOff = ()=>{
+        ObjectiveFormOn.value = false
+    }
+
+    const toggleGoalFormOn = ()=>{
+        GoalFormOn.value=true
+    }
+
+
+    const toggleGoalFormOff = ()=>{
+        GoalFormOn.value=false
+    }
+
+
+    const deleteSwitch = ()=>{
+        showDelete.value = true;
+        popupMenu.value = false;
+    }
 </script>
 
 <style scoped>
-  .objective-card{
-        background: #2b2f33;
-        margin: 1rem 1rem; 
-        border-radius: 15px;
-        padding:1rem;
-    }
+progress {
+  border-radius: 15px;
+  /* height:20%; */
+}
+progress::-webkit-progress-bar {
+  /* style rules */
+  border-radius: 15px;
+  height: 60%;
+  /* background-color: #490A47; */
+  
+}
+progress::-webkit-progress-value {
+  /* style rules */
+  border-radius: 15px;
+  background-color: #490A47;
+  
+}
+progress::-moz-progress-bar {
+  /* style rules */
+  border-radius: 15px;
+  /* height: 60%; */
+  background-color: #490A47;
+}
 
-    .objective-card > div{
-        margin: 1rem 0;
-    }
+.hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+}
 
-    .objective-card__notes a{
-        display:flex;
-        align-items: center;
-        text-decoration:none;
-        color: #b3ddc8;
-    }
-
-    .objective-card__btns{
-        display:flex;
-        justify-content: space-between;
-    }
-
-    .objective-card__btns button{
-        border:none;
-        padding:.5rem;
-        height:1.8rem;
-        width:3.5rem;
-        border-radius:8px;
-        text-align:center;
-        cursor:pointer;
-    }
-
-    .btns__edit{
-        color:rgba(255, 255, 255, 0.637);
-        background-color:rgba(218, 165, 32, 0.2);
-        transition: all .8s;
-    }
-
-    .btns__edit:hover{
-        color:rgba(218, 165, 32);
-        background-color:rgba(218, 165, 32, 0.1);
-    }
-
-    .btns__delete{
-        color:rgba(255, 255, 255, 0.637);
-        background-color: rgba(208, 68, 36, 0.2);
-        transition: all .8s;
-    }
-
-    .btns__delete:hover{
-        color:rgba(208, 68, 36);
-        background-color: rgba(208, 68, 36, 0.1);
-    }
+.hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
 </style>
