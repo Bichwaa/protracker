@@ -103,6 +103,48 @@ export namespace models {
 		    return a;
 		}
 	}
+	export class GoalUpdateDTO {
+	    ID: number;
+	    // Go type: time
+	    UpdatedAt: any;
+	    Name: string;
+	    // Go type: time
+	    EstimatedEndDate: any;
+	    Progress: number;
+	    Description: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new GoalUpdateDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.ID = source["ID"];
+	        this.UpdatedAt = this.convertValues(source["UpdatedAt"], null);
+	        this.Name = source["Name"];
+	        this.EstimatedEndDate = this.convertValues(source["EstimatedEndDate"], null);
+	        this.Progress = source["Progress"];
+	        this.Description = source["Description"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	
 	export class Objective {
 	    ID: number;
@@ -117,6 +159,7 @@ export namespace models {
 	    EstimatedEndDate: any;
 	    Progress: number;
 	    Description: string;
+	    Overseer: string;
 	    ProjectID: number;
 	    Goals: Goal[];
 	    Notes: Note[];
@@ -135,9 +178,54 @@ export namespace models {
 	        this.EstimatedEndDate = this.convertValues(source["EstimatedEndDate"], null);
 	        this.Progress = source["Progress"];
 	        this.Description = source["Description"];
+	        this.Overseer = source["Overseer"];
 	        this.ProjectID = source["ProjectID"];
 	        this.Goals = this.convertValues(source["Goals"], Goal);
 	        this.Notes = this.convertValues(source["Notes"], Note);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class ObjectiveUpdateDTO {
+	    ID: number;
+	    // Go type: time
+	    UpdatedAt: any;
+	    Name: string;
+	    Overseer: string;
+	    // Go type: time
+	    EstimatedEndDate: any;
+	    Progress: number;
+	    Description: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new ObjectiveUpdateDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.ID = source["ID"];
+	        this.UpdatedAt = this.convertValues(source["UpdatedAt"], null);
+	        this.Name = source["Name"];
+	        this.Overseer = source["Overseer"];
+	        this.EstimatedEndDate = this.convertValues(source["EstimatedEndDate"], null);
+	        this.Progress = source["Progress"];
+	        this.Description = source["Description"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
@@ -171,6 +259,7 @@ export namespace models {
 	    EstimatedEndDate: any;
 	    Progress: number;
 	    Description: string;
+	    Overseer: string;
 	    Tags: string;
 	    Objectives: Objective[];
 	    Notes: Note[];
@@ -189,6 +278,7 @@ export namespace models {
 	        this.EstimatedEndDate = this.convertValues(source["EstimatedEndDate"], null);
 	        this.Progress = source["Progress"];
 	        this.Description = source["Description"];
+	        this.Overseer = source["Overseer"];
 	        this.Tags = source["Tags"];
 	        this.Objectives = this.convertValues(source["Objectives"], Objective);
 	        this.Notes = this.convertValues(source["Notes"], Note);
@@ -217,6 +307,7 @@ export namespace models {
 	    // Go type: time
 	    UpdatedAt: any;
 	    Name: string;
+	    Overseer: string;
 	    // Go type: time
 	    EstimatedEndDate: any;
 	    Progress: number;
@@ -232,6 +323,7 @@ export namespace models {
 	        this.ID = source["ID"];
 	        this.UpdatedAt = this.convertValues(source["UpdatedAt"], null);
 	        this.Name = source["Name"];
+	        this.Overseer = source["Overseer"];
 	        this.EstimatedEndDate = this.convertValues(source["EstimatedEndDate"], null);
 	        this.Progress = source["Progress"];
 	        this.Description = source["Description"];

@@ -1,6 +1,11 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"errors"
+	"fmt"
+
+	"gorm.io/gorm"
+)
 
 func CreateTask(db *gorm.DB, taskData *Task) error {
 	cur := db.Create(taskData)
@@ -10,24 +15,41 @@ func CreateTask(db *gorm.DB, taskData *Task) error {
 	return nil
 }
 
-func GetTask(db *gorm.DB, id uint) (*Task, error) {
-	var task Task
-	if err := db.First(&task, id).Error; err != nil {
-		return nil, err
+func GetTasks(db *gorm.DB) ([]Task, error) {
+	var tasks []Task
+	cur := db.Preload("Notes").Find(&tasks)
+	if cur.Error != nil {
+		return nil, cur.Error
 	}
-	return &task, nil
+	return tasks, nil
+}
+
+func GetTask(db *gorm.DB, id uint) (Task, error) {
+	var task Task
+	task.ID = id
+	cur := db.Preload("Notes").Find(&task, id)
+	if cur.Error != nil {
+		if errors.Is(cur.Error, gorm.ErrRecordNotFound) {
+			return Task{}, fmt.Errorf("task with ID %d not found", id)
+		}
+		return Task{}, cur.Error
+	}
+	fmt.Println(task)
+	return task, nil
 }
 
 func UpdateTask(db *gorm.DB, taskData *Task) error {
-	if err := db.Save(taskData).Error; err != nil {
-		return err
+	cur := db.Save(taskData)
+	if cur.Error != nil {
+		return cur.Error
 	}
 	return nil
 }
 
 func DeleteTask(db *gorm.DB, id uint) error {
-	if err := db.Delete(&Task{}, id).Error; err != nil {
-		return err
+	cur := db.Delete(&Task{}, id)
+	if cur.Error != nil {
+		return cur.Error
 	}
 	return nil
 }

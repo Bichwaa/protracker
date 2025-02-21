@@ -1,6 +1,11 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"errors"
+	"fmt"
+
+	"gorm.io/gorm"
+)
 
 func CreateGoal(db *gorm.DB, goalData *Goal) error {
 	cur := db.Create(goalData)
@@ -10,12 +15,27 @@ func CreateGoal(db *gorm.DB, goalData *Goal) error {
 	return nil
 }
 
-func GetGoal(db *gorm.DB, id uint) (*Goal, error) {
-	var goal Goal
-	if err := db.First(&goal, id).Error; err != nil {
-		return nil, err
+func GetGoals(db *gorm.DB) ([]Goal, error) {
+	var goals []Goal
+	cur := db.Preload("Notes").Preload("Tasks").Find(&goals)
+	if cur.Error != nil {
+		return nil, cur.Error
 	}
-	return &goal, nil
+	return goals, nil
+}
+
+func GetGoal(db *gorm.DB, id uint) (Goal, error) {
+	var goal Goal
+	goal.ID = id
+	cur := db.Preload("Tasks").Find(&goal, id)
+	if cur.Error != nil {
+		if errors.Is(cur.Error, gorm.ErrRecordNotFound) {
+			return Goal{}, fmt.Errorf("goal with ID %d not found", id)
+		}
+		return Goal{}, cur.Error
+	}
+	fmt.Println(goal)
+	return goal, nil
 }
 
 func UpdateGoal(db *gorm.DB, goalData *Goal) error {

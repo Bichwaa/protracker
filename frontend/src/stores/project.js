@@ -7,11 +7,17 @@ export const useProjectStore = defineStore('project', () => {
   let projectCache = ref([])
   let filterTags = ref(new Set())
   let projects =ref([])
+  let currentProject = ref({})
   
   async function getProjects() {
     const {getProjects: gp} = useProjectController()
     projects.value =  await gp()
     projectCache.value = projects.value
+  }
+
+  async function getOneProject(id) {
+    const { getOneProject } = useProjectController()
+    currentProject.value =  await getOneProject(Number(id))
   }
 
   async function filterProjectsByTag(tag) {
@@ -48,5 +54,5 @@ async function resetFilters(){
   projects.value = projectCache.value;
 }
 
-  return { projects, getProjects, filterProjectsByTag, resetFilters }
+  return { projects, getProjects, getOneProject, currentProject, filterProjectsByTag, resetFilters }
 })

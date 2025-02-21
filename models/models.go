@@ -12,6 +12,7 @@ type Project struct {
 	EstimatedEndDate time.Time `gorm:"not null"`
 	Progress         int       `gorm:"not null"`
 	Description      string
+	Overseer         string
 	Tags             string      `gorm:"default:'all'"`
 	Objectives       []Objective `gorm:"foreignKey:ProjectID;constraint:OnDelete:CASCADE;"`
 	Notes            []Note      `gorm:"foreignKey:ProjectID;constraint:OnDelete:CASCADE;"`
@@ -20,7 +21,8 @@ type Project struct {
 type ProjectUpdateDTO struct {
 	ID               uint `gorm:"primarykey"`
 	UpdatedAt        time.Time
-	Name             string    `gorm:"not null"`
+	Name             string `gorm:"not null"`
+	Overseer         string
 	EstimatedEndDate time.Time `gorm:"not null"`
 	Progress         int       `gorm:"not null"`
 	Description      string
@@ -33,9 +35,20 @@ type Objective struct {
 	EstimatedEndDate time.Time `gorm:"not null"`
 	Progress         int       `gorm:"not null"`
 	Description      string
+	Overseer         string
 	ProjectID        uint   `gorm:"not null"`
 	Goals            []Goal `gorm:"foreignKey:ObjectiveID;constraint:OnDelete:CASCADE;"`
 	Notes            []Note `gorm:"foreignKey:ObjectiveID;constraint:OnDelete:CASCADE;"`
+}
+
+type ObjectiveUpdateDTO struct {
+	ID               uint `gorm:"primarykey"`
+	UpdatedAt        time.Time
+	Name             string `gorm:"not null"`
+	Overseer         string
+	EstimatedEndDate time.Time `gorm:"not null"`
+	Progress         int       `gorm:"not null"`
+	Description      string
 }
 
 type Goal struct {
@@ -46,6 +59,15 @@ type Goal struct {
 	Description      string
 	ObjectiveID      uint   `gorm:"not null"`
 	Notes            []Note `gorm:"foreignKey:GoalID;constraint:OnDelete:CASCADE;"`
+}
+
+type GoalUpdateDTO struct {
+	ID               uint `gorm:"primarykey"`
+	UpdatedAt        time.Time
+	Name             string    `gorm:"not null"`
+	EstimatedEndDate time.Time `gorm:"not null"`
+	Progress         int       `gorm:"not null"`
+	Description      string
 }
 
 type Task struct {

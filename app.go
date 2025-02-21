@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"protracker/controllers"
 	"protracker/models"
 
@@ -45,6 +44,45 @@ func (c *App) UpdateProject(pd models.ProjectUpdateDTO) error {
 }
 
 func (c *App) DeleteProject(id uint) error {
-	fmt.Println("the ID at app.go level is =====>", id)
 	return controllers.DeleteProjectController(&c.db, id)
+}
+
+func (c *App) CreateObjective(payload models.Objective) error {
+	c.ctx.Value("key")
+	return controllers.CreateObjectiveController(&c.db, payload)
+}
+
+func (c *App) FetchObjective(id uint) (models.Objective, error) {
+	return controllers.GetObjectiveController(&c.db, id)
+}
+func (c *App) FetchObjectives() ([]models.Objective, error) {
+	return controllers.GetObjectivesController(&c.db)
+}
+
+func (c *App) UpdateObjective(pd models.ObjectiveUpdateDTO) error {
+	return controllers.UpdateObjectiveController(&c.db, pd)
+}
+
+func (c *App) DeleteObjective(id uint) error {
+	return controllers.DeleteObjectiveController(&c.db, id)
+}
+
+func (c *App) CreateGoal(payload models.Goal) error {
+	return controllers.CreateGoalController(&c.db, payload)
+}
+
+func (c *App) FetchGoals() ([]models.Goal, error) {
+	return controllers.GetGoalsController(&c.db)
+}
+
+func (c *App) FetchGoal(id uint) (models.Goal, error) {
+	return controllers.GetGoalController(&c.db, id)
+}
+
+func (c *App) UpdateGoal(gd models.GoalUpdateDTO) error {
+	return controllers.UpdateGoalController(&c.db, gd)
+}
+
+func (c *App) DeleteGoal(id uint) error {
+	return controllers.DeleteGoalController(&c.db, id)
 }
