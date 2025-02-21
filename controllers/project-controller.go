@@ -39,6 +39,7 @@ func UpdateProjectController(db *gorm.DB, pd models.ProjectUpdateDTO) error {
 	project.Name = pd.Name
 	project.Tags = pd.Tags
 	project.EstimatedEndDate = pd.EstimatedEndDate
+	project.Overseer = pd.Overseer
 
 	err := models.UpdateProject(db, *project)
 	if err != nil {

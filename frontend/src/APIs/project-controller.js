@@ -18,7 +18,11 @@ export function useProjectController(){
         return UpdateProject(updatedData)
     }
 
-    return {createProject, getProjects, deleteProject, updateProject}
+    async function getOneProject(projectId) {
+        return FetchProject(projectId)
+    }
+
+    return {createProject, getProjects, getOneProject, deleteProject, updateProject}
 }
 
 // export async function getAllProjects(){

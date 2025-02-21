@@ -8,8 +8,8 @@
             <Dialog 
                 v-if="showDelete"  
                 @cancelled="showDelete=false"
-                @deleted="deleteProject" 
-                class="absolute top-0"/>
+                @deleted="deleteProject"
+            />
 
             <div class="relative" ref="menuContainer">
                 <Bars3BottomRightIcon class="text-black w-6 h-6 cursor-pointer" @click="popupMenu= !popupMenu"/>
@@ -67,6 +67,7 @@ import {ref, computed} from 'vue';
 import {useProjectController} from "../APIs/project-controller";
 import {Bars3BottomRightIcon, PencilIcon, TrashIcon, BookOpenIcon,  EyeIcon } from '@heroicons/vue/24/solid';
 import Dialog from "./Dialog.vue";
+import ObjectiveForm from '../components/ObjectiveForm.vue'
 
     const props = defineProps(['project'])
 
@@ -88,9 +89,9 @@ import Dialog from "./Dialog.vue";
     
     const handleClickOutside = (event)=> {
       // Check if the click event occurred outside the menu container
-      if (!menuContainer.value.contains(event.target)) {
+      if (menuContainer.value !=null && !menuContainer.value.contains(event.target)) {
         popupMenu.value = false;
-      }
+    }
     }
 
     const editProjectClicked = ()=>{
@@ -152,10 +153,10 @@ import Dialog from "./Dialog.vue";
 
 
 <style scoped>
-/* progress {
+progress {
   border-radius: 15px;
-  height:60%;
-} */
+  /* height:60%; */
+}
 progress::-webkit-progress-bar {
   /* style rules */
   border-radius: 15px;

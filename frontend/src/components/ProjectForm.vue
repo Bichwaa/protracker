@@ -35,6 +35,11 @@
                     <span class="text-sm text-red-500" v-if="errors.EstimatedEndDate" >{{ errors.EstimatedEndDate }}</span>
                 </div>
                 <div class="flex flex-col my-1">
+                    <label for="tags">Overseer:</label>
+                    <input type="text" v-model="projectData.Overseer" name="Overseer" placeholder="Firstname Lastname" class="border border-[#490a47] rounded-sm p-1">
+                    <span class="text-sm text-red-500" v-if="errors.Overseer" >{{ errors.Overseer }}</span>
+                </div>
+                <div class="flex flex-col my-1">
                     <label for="tags">Tags:</label>
                     <input type="text" v-model="projectData.Tags" name="Tags" placeholder="comma separated tags" class="border border-[#490a47] rounded-sm p-1">
                     <span class="text-sm text-red-500" v-if="errors.Tags" >{{ errors.Tags }}</span>
@@ -67,6 +72,7 @@ const props = defineProps({
             UpdatedAt: null,
             DeletedAt:null,
             Name:null,
+            Overseer: null,
             Tags:null,
             BeginDate:null,
             EstimatedEndDate:null,
@@ -89,6 +95,7 @@ const nullProjFields = {
             UpdatedAt: null,
             DeletedAt:null,
             Name:null,
+            Overseer: null,
             Tags:null,
             BeginDate:null,
             EstimatedEndDate:null,
@@ -104,6 +111,7 @@ const projectschema = z.object({
             ID:z.number().int().optional(),
             Name:z.string({message:"project must have name"}).nonempty(),
             Tags:z.string(),
+            Overseer: z.string(),
             EstimatedEndDate:z.string({message:'Expected date, received nothing'}).datetime().nonempty(), 
             Description:z.string(),
 })
@@ -112,14 +120,14 @@ const errors = ref({
             Name:"",
             Tags:"",
             EstimatedEndDate:"",
-            Description:""
+            Description:"",
+            Overseer:""
 })
 
 //End validation Logic
 
 const bye = () => {
     emit("modal-off");
-    console.log(projectData.value)
 };
 
 const submitForm = async () => {
@@ -135,10 +143,8 @@ const submitForm = async () => {
         // console.log(data)
         data.EstimatedEndDate = new Date(data.EstimatedEndDate).toJSON();
 
-        console.log(data)
         const validation = projectschema.safeParse(data)
         if (!validation.success) {
-            console.log('Form data:', validation);
             // Handle validation errors
             validation.error.errors.forEach((err) => {
             errors.value[err.path[0]] = err.message;

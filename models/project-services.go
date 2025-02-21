@@ -1,6 +1,9 @@
 package models
 
 import (
+	"errors"
+	"fmt"
+
 	"gorm.io/gorm"
 )
 
@@ -23,10 +26,15 @@ func GetProjects(db *gorm.DB) ([]Project, error) {
 
 func GetProject(db *gorm.DB, id uint) (Project, error) {
 	var project Project
-	cur := db.First(&project, id)
+	project.ID = id
+	cur := db.Preload("Objectives").Find(&project, id)
 	if cur.Error != nil {
+		if errors.Is(cur.Error, gorm.ErrRecordNotFound) {
+			return Project{}, fmt.Errorf("project with ID %d not found", id)
+		}
 		return Project{}, cur.Error
 	}
+	fmt.Println(project)
 	return project, nil
 }
 
