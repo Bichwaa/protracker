@@ -3,7 +3,7 @@
     <div class="col-span-1 mx-4">
       <AppBar/>
     </div>
-    <div class="col-span-11">
+    <div class="col-span-11 h-[100vh] overflow-scroll">
       <router-view/>
     </div>
   </div>
