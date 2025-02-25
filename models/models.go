@@ -59,6 +59,7 @@ type Goal struct {
 	Description      string
 	ObjectiveID      uint   `gorm:"not null"`
 	Notes            []Note `gorm:"foreignKey:GoalID;constraint:OnDelete:CASCADE;"`
+	Tasks            []Task `gorm:"foreignKey:GoalID;constraint:OnDelete:CASCADE;"`
 }
 
 type GoalUpdateDTO struct {
@@ -75,8 +76,15 @@ type Task struct {
 	Name             string    `gorm:"not null"`
 	EstimatedEndDate time.Time `gorm:"not null"`
 	Progress         int       `gorm:"not null"`
-	Description      string
+	GoalID           uint
 	Notes            []Note `gorm:"foreignKey:TaskID;constraint:OnDelete:CASCADE;"`
+}
+
+type TaskUpdateDTO struct {
+	ID               uint
+	Name             string
+	EstimatedEndDate time.Time
+	Progress         uint8
 }
 
 type Note struct {
@@ -87,4 +95,9 @@ type Note struct {
 	ObjectiveID uint
 	GoalID      uint
 	TaskID      uint
+}
+
+type NoteUpdateDTO struct {
+	Title   string
+	Content string
 }

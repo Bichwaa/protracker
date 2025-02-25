@@ -86,3 +86,27 @@ func (c *App) UpdateGoal(gd models.GoalUpdateDTO) error {
 func (c *App) DeleteGoal(id uint) error {
 	return controllers.DeleteGoalController(&c.db, id)
 }
+
+func (c *App) CreateTask(payload models.Task) error {
+	return controllers.CreateTaskController(&c.db, payload)
+}
+
+func (c *App) FetchTasks() ([]models.Task, error) {
+	return controllers.GetTasksController(&c.db)
+}
+
+func (c *App) FetchTask(id uint) (models.Task, error) {
+	return controllers.GetTaskController(&c.db, id)
+}
+
+func (c *App) UpdateTask(td models.TaskUpdateDTO) error {
+	return controllers.UpdateTaskController(&c.db, td)
+}
+
+func (c *App) DeleteTask(id uint) error {
+	return controllers.DeleteTaskController(&c.db, id)
+}
+
+func (c *App) MarkTaskAsCompleted(id uint) error {
+	return controllers.MarkTaskAsCompleted(&c.db, id)
+}

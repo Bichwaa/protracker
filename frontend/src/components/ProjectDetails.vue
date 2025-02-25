@@ -6,17 +6,19 @@
                 @objective-created="getProject"
             />
             <objective-card 
-                v-for="obj in project.Objectives" 
+                v-for="obj in sortedObjectives" 
                 :objective="obj"  
+                :activeId="activeObjectiveId"
                 :key="obj.ID"
                 @objective-edited="getProject"
                 @objective-deleted="getProject"
+                @new-activation="handleNewActivation"
             />
         </div>
         <div class="board__goals col-span-7 px-4 flex flex-col gap-2">
             <details-summary-card :project="project"/>
             <div class="grid grid-cols-2 gap-2">
-                <goal-card v-for="i in 4" />
+                <goal-card v-for="i in currentObjectiveGoals" :goal="i" @refresh="getProject"/>
             </div>
         </div>
     </div>
@@ -30,33 +32,55 @@ import ObjectiveTitleCard from './ObjectiveTitleCard.vue';
 import DetailsSummaryCard from './DetailsSummaryCard.vue';
 import GoalCard from './GoalCard.vue';
 import {useProjectStore} from "../stores/project.js";
+import {useGoalController} from "../APIs/goal-controller.js";
 
 const route = useRoute();
-
-const objectives = ref([
-    {name:"kiruu", description:"also kiruuuu", progress:40},
-    {name:"objective1", description:"description for objective1", progress:20},
-    {name:"objective2", description:"description for objective2", progress:50},
-    {name:"objective3", description:"description for objective3", progress:80},
-    {name:"objective4", description:"description for objective4", progress:100},
-]);
 
 const project =  computed(()=>{
     return projectStore.currentProject
 })
 
+const activeObjectiveId = ref(0)
 
 const projectStore = useProjectStore();
+
+const {getGoals} = useGoalController()
+
+const handleNewActivation = (data)=>{
+    //data is the objective ID
+activeObjectiveId.value = data
+}
 
 const getProject = async ()=>{
     const projectId = route.params.id;
     await projectStore.getOneProject(projectId)
 }
 
+const sortedObjectives = computed(()=>{
+    if(project.value.Objectives!=null && project.value.Objectives.length>0){
+        const sorted = project.value.Objectives.sort((a,b)=>{return a.ID > b.ID ? -1 : 1})
+        activeObjectiveId.value = sorted[0].ID 
+        return sorted
+    }else{
+        return []
+    }
+})
 
-const progress = ref(60);
+const currentObjectiveGoals = computed(()=>{
+    if(project.value.Objectives && project.value.Objectives.length>0){
+        const obje = project.value.Objectives.find((obj)=> obj.ID==activeObjectiveId.value);
+        if(obje.Goals != null){
+            return obje.Goals
+        }else{
+            return []
+        }
+    }else{
+        return []
+    }
+})
 
 onMounted(async ()=>{
     await getProject()
 })
 </script>
+

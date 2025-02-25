@@ -14,6 +14,10 @@ export function CreateProject(arg1) {
   return window['go']['main']['App']['CreateProject'](arg1);
 }
 
+export function CreateTask(arg1) {
+  return window['go']['main']['App']['CreateTask'](arg1);
+}
+
 export function DeleteGoal(arg1) {
   return window['go']['main']['App']['DeleteGoal'](arg1);
 }
@@ -24,6 +28,10 @@ export function DeleteObjective(arg1) {
 
 export function DeleteProject(arg1) {
   return window['go']['main']['App']['DeleteProject'](arg1);
+}
+
+export function DeleteTask(arg1) {
+  return window['go']['main']['App']['DeleteTask'](arg1);
 }
 
 export function FetchGoal(arg1) {
@@ -50,6 +58,18 @@ export function FetchProjects() {
   return window['go']['main']['App']['FetchProjects']();
 }
 
+export function FetchTask(arg1) {
+  return window['go']['main']['App']['FetchTask'](arg1);
+}
+
+export function FetchTasks() {
+  return window['go']['main']['App']['FetchTasks']();
+}
+
+export function MarkTaskAsCompleted(arg1) {
+  return window['go']['main']['App']['MarkTaskAsCompleted'](arg1);
+}
+
 export function UpdateGoal(arg1) {
   return window['go']['main']['App']['UpdateGoal'](arg1);
 }
@@ -60,4 +80,8 @@ export function UpdateObjective(arg1) {
 
 export function UpdateProject(arg1) {
   return window['go']['main']['App']['UpdateProject'](arg1);
+}
+
+export function UpdateTask(arg1) {
+  return window['go']['main']['App']['UpdateTask'](arg1);
 }

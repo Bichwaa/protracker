@@ -6,12 +6,12 @@
             <div class="w-full flex flex-row-reverse">
                 <span class="text-2xl cursor-pointer hover:text-red-500 duration-300" @click="bye">&times;</span>
             </div>
-            <form method="post" id="goal-form" @submit.prevent="submitForm" v-if="goalFormShow" class="flex flex-col">
+            <form method="post" id="task-form" @submit.prevent="submitForm" v-if="taskFormShow" class="flex flex-col">
                 <div class="flex flex-col my-1">
                     <label for="name">Name</label>
                     <input 
                         type="text" 
-                        v-model="goalData.Name" 
+                        v-model="taskData.Name" 
                         name="Name" placeholder="Name" 
                         class="border border-[#490a47] rounded-sm p-1"
                         @focus="errors.Name = ''"
@@ -19,28 +19,18 @@
                     <span class="text-sm text-red-500" v-if="errors.Name" >{{ errors.Name }}</span>
                 </div>
                 <div class="flex flex-col my-1">
-                    <label for="description">Description</label>
-                    <textarea 
-                        v-model="goalData.Description" 
-                        name="Description" 
-                        placeholder="Description" 
+                    <label for="estimatedEndDate">Estimated End Date</label>
+                    <input 
+                        type="datetime-local" 
+                        v-model="taskData.EstimatedEndDate" 
+                        name="EstimatedEndDate" 
                         class="border border-[#490a47] rounded-sm p-1"
-                        @focus="errors.Description = ''"
-                        />
-                    <span class="text-sm text-red-500" v-if="errors.Description" >{{ errors.Description }}</span>
-                </div>
-                <div class="flex flex-col my-1">
-                    <label for="name">Deadline</label>
-                    <input type="datetime-local" v-model="goalData.EstimatedEndDate" name="EstimatedEndDate" class="border border-[#490a47] rounded-sm p-1">
+                        @focus="errors.EstimatedEndDate = ''"
+                    />
                     <span class="text-sm text-red-500" v-if="errors.EstimatedEndDate" >{{ errors.EstimatedEndDate }}</span>
                 </div>
-                <!-- <div class="flex flex-col my-1">
-                    <label for="tags">Overseer:</label>
-                    <input type="text" v-model="goalData.Overseer" name="Overseer" placeholder="Firstname Lastname" class="border border-[#490a47] rounded-sm p-1">
-                    <span class="text-sm text-red-500" v-if="errors.Overseer" >{{ errors.Overseer }}</span>
-                </div> -->
                 <button type="submit" class="mt-3 bg-[#490a47] disabled:bg-gray-200 text-white font-medium p-3 cursor-pointer grid place-content-center rounded-md" >
-                    <span v-if="!loading"> {{ edit ?  'Update Goal' : 'Create Goal' }} </span>
+                    <span v-if="!loading"> {{ edit ?  'Update Task' : 'Create Task' }} </span>
                     <Loader v-else  class="h-5 w-5"/>
                 </button>
             </form>
@@ -51,7 +41,7 @@
 <script setup>
 import { ref, defineEmits, onMounted} from 'vue';
 import { z } from "zod";
-import { useGoalController } from "../APIs/goal-controller";
+import { useTaskController } from "../APIs/task-controller.js";
 import Loader from './Loader.vue';
 
 const props = defineProps({
@@ -59,11 +49,11 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    objectiveId:{
+    goalId:{
         type: Number,
         default:0
     },
-    goal : {
+    task : {
         type: Object,
         default: {
             ID:null,
@@ -71,51 +61,39 @@ const props = defineProps({
             UpdatedAt: null,
             DeletedAt:null,
             Name:null,
-            BeginDate:null,
             EstimatedEndDate:null,
-            Progress:null,
-            Description:null,
-            // Overseer:null,
-            Goals:[],
             Notes:[]
         }
     }
 });
 const loading = ref(false)
 
-const emit = defineEmits(['modal-off', 'goal-created', 'goal-updated']);
+const emit = defineEmits(['modal-off', 'task-created', 'task-updated']);
 
-const goalFormShow = ref(true);
+const taskFormShow = ref(true);
 
-const nullGoalFields = {
+const nullTaskFields = {
             ID:null,
             CreatedAt: null,
             UpdatedAt: null,
             DeletedAt:null,
             Name:null,
-            BeginDate:null,
             EstimatedEndDate:null,
-            Progress:null,
-            Description:null,
-            // Overseer:null,
-            Goals:[],
             Notes:[]
 }
 
-const goalData = ref(nullGoalFields)
+const taskData = ref(nullTaskFields)
 //validation Logic
-const goalSchema = z.object({
+const taskSchema = z.object({
             ID:z.number().int().optional(),
-            Name:z.string({message:"Goal must have a name"}).nonempty(),
+            Name:z.string({message:"Task must have a name"}).nonempty(),
             EstimatedEndDate:z.string({message:'Expected date, received nothing'}).datetime().nonempty(), 
-            Description:z.string(),
-            // Overseer:z.string(),
 })
 
+// Error handling
 const errors = ref({
             Name:"",
             EstimatedEndDate:"",
-            Description:""
 })
 
 //End validation Logic
@@ -126,13 +104,13 @@ const bye = () => {
 
 const submitForm = async () => {
     loading.value = true;
-    const { createGoal, updateGoal } = useGoalController();
-    let form = document.getElementById('goal-form');
+    const { createTask, updateTask } = useTaskController();
+    let form = document.getElementById('task-form');
         const formItems = [...form];
         const keyVals = formItems.filter(i => i.type != "submit").map(item => [item.name, item.value]);
         const data = Object.fromEntries(keyVals);
         data.EstimatedEndDate = new Date(data.EstimatedEndDate).toJSON();
-        const validation = goalSchema.safeParse(data)
+        const validation = taskSchema.safeParse(data)
         if (!validation.success) {
             validation.error.errors.forEach((err) => {
             errors.value[err.path[0]] = err.message;
@@ -141,21 +119,21 @@ const submitForm = async () => {
             loading.value = false;
         }
     if(!props.edit && validation.success){
-        data.ObjectiveID = props.objectiveId;
-        await createGoal(data);
-        emit("goal-created");
+        data.GoalID = props.goalId;
+        await createTask(data);
+        emit("task-created");
     }else if(props.edit && validation.success){
-        data.ID = goalData.value.ID
-        await updateGoal(data);
-        emit("goal-updated");
+        data.ID = taskData.value.ID
+        await updateTask(data);
+        emit("task-updated");
     }
 }
 
 onMounted(()=>{
-    goalData.value = nullGoalFields
+    taskData.value = nullTaskFields
     if(props.edit){
-        goalData.value = props.goal
-        goalData.value.EstimatedEndDate = new Date(props.goal.EstimatedEndDate).toISOString().substring(0, 16)
+        taskData.value = props.task
+        taskData.value.EstimatedEndDate = new Date(props.task.EstimatedEndDate).toISOString().substring(0, 16)
     }
 })
 
