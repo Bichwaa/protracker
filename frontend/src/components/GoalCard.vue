@@ -15,7 +15,7 @@
             <div class="relative" ref="menuContainer">
                 <Bars3BottomRightIcon class="text-black w-6 h-6 cursor-pointer" @click="popupMenu= !popupMenu"/>
 
-                <div class="popout-menu absolute right-5 top-0 shadow-xl rounded-md w-44 bg-gloom p-2"  v-if="popupMenu" >
+                <div class="popout-menu absolute right-5 top-0 shadow-xl rounded-md w-44 bg-gloom p-2 z-50"  v-if="popupMenu" >
                     <ul class="flex flex-col">
                         <li class="cursor-pointer my-1 p-2">
                             <router-link :to="{name:'Details', params:{id:1}}"  class="flex gap-4 items-center ">
@@ -58,14 +58,14 @@
                 <span class="note-text font-medium text-royal">0 Notes</span>
             </router-link>
         </div>
-        <div class="progress w-full">
+        <div class="progress w-full relative z-0">
             <span class="font-semibold">Progress:</span> <span class="font-semibold text-3xl">{{goal.Progress}}%</span>
             <br>
             <progress max="100" :value="goal.Progress" class="w-[80%]"></progress>
         </div>
         <span class="font-semibold">Tasks</span>
-        <div class="flex flex-col gap-2 mt-2 h-36 overflow-scroll hide-scrollbar">
-            <TaskCard v-for="i in goal.Tasks" :task="i" @refresh="handleTaskCreated"/>
+        <div class="flex flex-col gap-2 mt-2 h-36 overflow-scroll hide-scrollbar ">
+            <TaskCard v-for="i in goal.Tasks" :key="i.ID" :task="i" @refresh="handleTaskCreated"/>
         </div>
     </div>
 </template>

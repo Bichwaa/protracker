@@ -47,7 +47,10 @@ func UpdateTask(db *gorm.DB, taskData *Task) error {
 }
 
 func DeleteTask(db *gorm.DB, id uint) error {
-	cur := db.Delete(&Task{}, id)
+	var task Task
+	task.ID = id
+	db.Find(&task, id) //must be passed to context to be used by pre-delelete hook
+	cur := db.Delete(&task, id)
 	if cur.Error != nil {
 		return cur.Error
 	}

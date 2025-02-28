@@ -22,7 +22,7 @@
                  />
         </div>
 
-        <div>
+        <div class="relative">
             <Dialog 
                 v-if="showDelete"
                 entity="Task"  

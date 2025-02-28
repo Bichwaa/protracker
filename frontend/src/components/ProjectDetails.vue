@@ -59,7 +59,9 @@ const getProject = async ()=>{
 const sortedObjectives = computed(()=>{
     if(project.value.Objectives!=null && project.value.Objectives.length>0){
         const sorted = project.value.Objectives.sort((a,b)=>{return a.ID > b.ID ? -1 : 1})
-        activeObjectiveId.value = sorted[0].ID 
+        if(activeObjectiveId.value==0){
+            activeObjectiveId.value = sorted[0].ID 
+        }
         return sorted
     }else{
         return []

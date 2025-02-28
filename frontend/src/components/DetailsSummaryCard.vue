@@ -17,7 +17,7 @@
             </div>
             <div class="col-span-1 flex flex-col justify-between">
                 <div class="flex flex-col">
-                    <span class="font-semibold text-5xl text-black text-right">{{avgProgress}}%</span>
+                    <span class="font-semibold text-5xl text-black text-right">{{avgProgress.toFixed(0)}}%</span>
                     <span class="capitalize text-black text-lg font-medium text-right">Completed</span>
                 </div>
             </div>

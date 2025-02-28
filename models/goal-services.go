@@ -47,7 +47,12 @@ func UpdateGoal(db *gorm.DB, goalData *Goal) error {
 }
 
 func DeleteGoal(db *gorm.DB, id uint) error {
-	cur := db.Delete(&Goal{}, id)
+	var goal Goal
+	goal.ID = id
+	if err := db.First(&goal, id).Error; err != nil {
+		return err
+	}
+	cur := db.Delete(&goal, id)
 	if cur.Error != nil {
 		return cur.Error
 	}

@@ -47,7 +47,12 @@ func UpdateObjective(db *gorm.DB, objectiveData *Objective) error {
 }
 
 func DeleteObjective(db *gorm.DB, id uint) error {
-	cur := db.Delete(&Objective{}, id)
+	var obj Objective
+	obj.ID = id
+	if err := db.First(&obj, id).Error; err != nil {
+		return err
+	}
+	cur := db.Delete(&obj, id)
 	if cur.Error != nil {
 		return cur.Error
 	}
