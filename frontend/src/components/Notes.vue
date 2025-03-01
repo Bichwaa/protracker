@@ -1,20 +1,5 @@
 <template>
-    <div class="board">
-        <div class="board__path">
-            <router-link to="/">
-                <img src="../assets/images/home.png" alt="">
-                <span>PROJECT </span>
-            </router-link>
-            <router-link to="/project-details">
-                <span> > objective</span>
-            </router-link>
-            <router-link to="/project-details">
-                <span> > goal</span>
-            </router-link>
-            <router-link to="/project-details">
-                <span> > task</span>
-            </router-link>
-        </div>
+    <div class="board py-4">
         <div class="board__organizer">
         </div>
         <div class="board__notes">
@@ -69,45 +54,3 @@ export default {
 }
 </script>
 
-<style scoped>
-    .board{
-        display:flex;
-        flex-direction: column;
-    }
-
-    .board__path{
-        padding:1em 0;
-    }
-
-    .board__path a{
-        color:#b3ddc8;
-        text-decoration: none;
-        text-transform: uppercase;
-    }
-
-    .board__path span{
-        font-size:1.7rem;
-        font-weight: 700;
-    }
-
-    .board__notes{
-        display: grid;
-        grid-template-columns: 60% 40%;
-    }
-
-    .board__notes__list{
-        /* display:grid; */
-        /* grid-template-columns: repeat(3, 1fr); */
-        display:flex;
-        flex-wrap:wrap;
-    }
-
-    .board__notes__current{
-        border-left: solid .5px #b3ddc8;
-        padding:1rem;
-    }
-
-    .board__notes__current h3{
-        text-transform: uppercase;
-    }
-</style>

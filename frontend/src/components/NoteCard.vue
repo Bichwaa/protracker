@@ -1,9 +1,9 @@
 <template>
-    <div class="note-card">
-        <h3 class="note-card__header">
+    <div class="note-card rounded-lg bg-gloom p-4">
+        <h3 class="note-card__header font-medium">
             Lorem ipsum dolor sit amet.
         </h3>
-        <div class="note-card__body">
+        <div class="note-card__body line-clamp-1-3">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. 
             Provident, assumenda temporibus incidunt adipisci reiciendis iure sit esse. 
             Quasi voluptates excepturi quod quo pariatur repellat possimus qui voluptatum 
@@ -28,93 +28,6 @@
             <a href="#">duh</a>
             <a href="#">uh!</a>
         </div>
-        <div class="note-card__btns">
-            <a href="#">
-                <img src="../assets/images/edit.png"><span class="edit">EDIT</span>
-            </a>
-            <a href="#">
-                <img src="../assets/images/delete.png"><span class="delete">DELETE</span>
-            </a>
-        </div>
     </div>
 </template>
 
-<style scoped>
-    .note-card{
-        display: flex;
-        flex-direction: column;
-        width:12rem;
-        max-height: 17rem;
-        background-color:#2b2f33 ;
-        margin:1rem;
-        padding:1rem;
-        border-radius:15px;
-    }
-
-    .note-card div{
-        margin:.5rem 0;
-    }
-
-    .note-card__header{
-        text-transform: uppercase;
-    }
-
-    .note-card__tags{
-        font-size: .7rem;
-        font-weight: 600;
-    }
-
-    .note-card__tags a{
-        text-decoration: none;
-        color:black;
-        text-transform:uppercase;
-        background-color:rgba(248, 248, 248, 0.541);
-        margin-right:.5rem;
-        padding: .2rem;
-        border-radius:5px;
-    }
-
-    .note-card__body{
-        overflow: hidden;
-    }
-
-    .note-card__btns{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .note-card__btns a{
-        text-decoration: none;
-        font-size:.8rem;
-        display:flex;
-        align-items: center;
-        /* margin:0 1rem; */
-    }
-
-    .edit{
-        color:rgba(218, 165, 32, 0.5);
-        font-weight:700;
-        margin:0 .5rem;
-        transition: all 1s;
-        
-    }
-    .edit:hover{
-        color:rgba(218, 165, 32, 0.9);
-        padding:.5px;
-        background-color:rgba(218, 165, 32, 0.1);
-    }
-
-    .delete{
-        color: rgba(208, 68, 36, 0.5);
-        font-weight:700;
-        margin:0 .5rem;
-        transition: all 1s;
-    }
-
-    .delete:hover{
-        color: rgba(208, 68, 36, 0.9);
-        padding:.5px;
-        background-color: rgba(208, 68, 36, 0.1);
-    }
-</style>

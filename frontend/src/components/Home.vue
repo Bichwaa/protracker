@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <section class="home__topsection grid grid-cols-3 px-4 mt-4 gap-4">
+    <section class="home__topsection grid grid-cols-3 pr-4 mt-4 gap-4">
       <div class="grid col-span-1">
         <InfoCard v-on:add-project-clicked="toggleProjectFormOn"/>
       </div>
@@ -18,7 +18,7 @@
         @project-updated = "handleProjectUpdated"
         />
     </section>
-    <section class="px-4 pt-2" v-if="filters.show">
+    <section class="pr-4 pt-2" v-if="filters.show">
       <div class="flex p-1 items-center gap-2">
         <span class="text-sm font-medium">Filters:</span>
         <span> <a class="text-sm bg-gray-200 mx-1 rounded-xl px-4  cursor-pointer" v-for="tag in filters.filterTagList">{{tag}}</a></span>
@@ -28,7 +28,7 @@
         </span>
       </div>
     </section>
-    <section class="grid grid-cols-3 gap-4 p-4">
+    <section class="grid grid-cols-3 gap-4 pr-4 pt-4">
         <template v-if="projects">
         <ProjectCard
         class="col-span-1"

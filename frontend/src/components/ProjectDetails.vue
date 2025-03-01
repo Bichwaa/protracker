@@ -1,5 +1,5 @@
 <template>
-    <div class="board grid grid-cols-10 p-4">
+    <div class="board grid grid-cols-10 py-4">
         <div class="board__objectives col-span-3 flex flex-col gap-2">
             <objective-title-card 
                 :projectId="project.ID"

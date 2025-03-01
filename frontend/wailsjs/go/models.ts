@@ -60,6 +60,7 @@ export namespace models {
 	    DeletedAt: any;
 	    Title: string;
 	    Content: string;
+	    Tags: string;
 	    ProjectID: number;
 	    ObjectiveID: number;
 	    GoalID: number;
@@ -77,6 +78,7 @@ export namespace models {
 	        this.DeletedAt = this.convertValues(source["DeletedAt"], null);
 	        this.Title = source["Title"];
 	        this.Content = source["Content"];
+	        this.Tags = source["Tags"];
 	        this.ProjectID = source["ProjectID"];
 	        this.ObjectiveID = source["ObjectiveID"];
 	        this.GoalID = source["GoalID"];
