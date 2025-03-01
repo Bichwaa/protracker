@@ -5,7 +5,7 @@
         <InfoCard v-on:add-project-clicked="toggleProjectFormOn"/>
       </div>
       <div class="grid col-span-2">
-        <SummaryCard />
+        <SummaryCard :projects="projects"/>
       </div>
     </section>
     <section>
