@@ -4,6 +4,8 @@ import {models} from '../models';
 
 export function CreateGoal(arg1:models.Goal):Promise<void>;
 
+export function CreateNote(arg1:models.Note):Promise<void>;
+
 export function CreateObjective(arg1:models.Objective):Promise<void>;
 
 export function CreateProject(arg1:models.Project):Promise<void>;
@@ -11,6 +13,8 @@ export function CreateProject(arg1:models.Project):Promise<void>;
 export function CreateTask(arg1:models.Task):Promise<void>;
 
 export function DeleteGoal(arg1:number):Promise<void>;
+
+export function DeleteNote(arg1:number):Promise<void>;
 
 export function DeleteObjective(arg1:number):Promise<void>;
 
@@ -21,6 +25,10 @@ export function DeleteTask(arg1:number):Promise<void>;
 export function FetchGoal(arg1:number):Promise<models.Goal>;
 
 export function FetchGoals():Promise<Array<models.Goal>>;
+
+export function FetchNote(arg1:number):Promise<models.Note>;
+
+export function FetchNotes():Promise<Array<models.Note>>;
 
 export function FetchObjective(arg1:number):Promise<models.Objective>;
 
@@ -37,6 +45,8 @@ export function FetchTasks():Promise<Array<models.Task>>;
 export function MarkTaskAsCompleted(arg1:number):Promise<void>;
 
 export function UpdateGoal(arg1:models.GoalUpdateDTO):Promise<void>;
+
+export function UpdateNote(arg1:models.NoteUpdateDTO):Promise<void>;
 
 export function UpdateObjective(arg1:models.ObjectiveUpdateDTO):Promise<void>;
 

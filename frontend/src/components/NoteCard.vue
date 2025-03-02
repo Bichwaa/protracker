@@ -1,9 +1,12 @@
 <template>
-    <div class="note-card rounded-lg bg-gloom p-4">
-        <h3 class="note-card__header font-medium">
+    <div 
+        class="note-card rounded-lg p-4 mb-2"
+        :class="activeId==note.ID?'active': 'bg-gloom'"
+        >
+        <h3 class="note-card__header font-medium cursor-pointer" @click="activate">
             Lorem ipsum dolor sit amet.
         </h3>
-        <div class="note-card__body line-clamp-1-3">
+        <div class="note-card__body line-clamp-3 cursor-pointer" @click="activate">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. 
             Provident, assumenda temporibus incidunt adipisci reiciendis iure sit esse. 
             Quasi voluptates excepturi quod quo pariatur repellat possimus qui voluptatum 
@@ -31,3 +34,29 @@
     </div>
 </template>
 
+<script setup>
+
+const props = defineProps({
+    note:{
+        type: Object,
+        default: {}
+    },
+    activeId:{
+        type:Number,
+        default:0
+    }
+})
+
+const emit = defineEmits(['new-activation'])
+
+const activate = ()=>{
+ emit('new-activation', props.note)
+}
+
+</script>
+
+<style scoped>
+.active{
+    background-color: rgba(73, 10, 71, 0.29);
+}
+</style>

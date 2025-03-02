@@ -6,6 +6,10 @@ export function CreateGoal(arg1) {
   return window['go']['main']['App']['CreateGoal'](arg1);
 }
 
+export function CreateNote(arg1) {
+  return window['go']['main']['App']['CreateNote'](arg1);
+}
+
 export function CreateObjective(arg1) {
   return window['go']['main']['App']['CreateObjective'](arg1);
 }
@@ -20,6 +24,10 @@ export function CreateTask(arg1) {
 
 export function DeleteGoal(arg1) {
   return window['go']['main']['App']['DeleteGoal'](arg1);
+}
+
+export function DeleteNote(arg1) {
+  return window['go']['main']['App']['DeleteNote'](arg1);
 }
 
 export function DeleteObjective(arg1) {
@@ -40,6 +48,14 @@ export function FetchGoal(arg1) {
 
 export function FetchGoals() {
   return window['go']['main']['App']['FetchGoals']();
+}
+
+export function FetchNote(arg1) {
+  return window['go']['main']['App']['FetchNote'](arg1);
+}
+
+export function FetchNotes() {
+  return window['go']['main']['App']['FetchNotes']();
 }
 
 export function FetchObjective(arg1) {
@@ -72,6 +88,10 @@ export function MarkTaskAsCompleted(arg1) {
 
 export function UpdateGoal(arg1) {
   return window['go']['main']['App']['UpdateGoal'](arg1);
+}
+
+export function UpdateNote(arg1) {
+  return window['go']['main']['App']['UpdateNote'](arg1);
 }
 
 export function UpdateObjective(arg1) {

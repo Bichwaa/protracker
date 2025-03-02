@@ -1,15 +1,32 @@
 <template>
     <div class="board py-4">
-        <div class="board__organizer">
-        </div>
-        <div class="board__notes">
-            <div class="board__notes__list">
-                <note-card v-for="note in notes" :key="note.id"/>
+        <div class="board__notes grid grid-cols-12 gap-2">
+            <div class="hide-scrollbar col-span-4 pr-2 overflow-scroll h-[94vh]">
+                <notes-title-card class="mb-3"/>
+                <note-card 
+                    v-for="note in sortedNotes" 
+                    :key="note.ID" 
+                    :note="note" 
+                    :activeId="activeNote.ID"
+                    @new-activation="handleNewActivation"
+                />
             </div>
-            <div class="board__notes__current">
-                <h3>Another boring ass header</h3>
+            <div class="board__notes__current col-span-8 px-8">
+                <h3 class="font-medium text-lg">{{ activeNote.Title }}</h3>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                    {{ activeNote.Content }}
+                </p>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue';
+import NoteCard from './NoteCard.vue';
+import NotesTitleCard from './NotesTitleCard.vue';
+
+const PLACEHOLDER_TEXT = `Lorem ipsum dolor sit amet consectetur adipisicing elit. 
                     Provident, assumenda temporibus incidunt adipisci reiciendis iure sit esse. 
                     Quasi voluptates excepturi quod quo pariatur repellat possimus qui voluptatum 
                     laborum aliquid quaerat maiores aperiam explicabo enim voluptatibus, obcaecati 
@@ -26,31 +43,45 @@
                     error incidunt harum officia animi aliquid sit. Amet omnis, fugit nihil 
                     blanditiis earum maxime! Suscipit sunt fuga a. Architecto placeat ea 
                     necessitatibus numquam excepturi, facilis dolores, incidunt officiis ab 
-                    doloribus fugiat sed nulla vel itaque! Ratione nam, quas quibusdam magnam.
-                </p>
-            </div>
-        </div>
-    </div>
-</template>
+                    doloribus fugiat sed nulla vel itaque! Ratione nam, quas quibusdam magnam.`
 
-<script>
-import NoteCard from './NoteCard.vue';
-export default {
-    data:function(){
-        return{
-            notes:[
-                {id:1, title:"this is a note title", body:"lorem50", tags:["one", "three"]},
-                {id:2, title:"this is a note title 2", body:"lorem50", tags:["two", "three"]},
-                {id:3, title:"this is a tripple note title", body:"lorem50", tags:["one", "three"]},
-                {id:4, title:"this is a title 4 a note", body:"lorem50", tags:["one", "three"]},
-                {id:5, title:"this is a galaxy note5 title", body:"lorem50", tags:["one", "three"]},
-                {id:6, title:"Six is a note title", body:"lorem50", tags:["one", "three"]},
-            ]
-        }
-    },
-    components:{
-        NoteCard
-    }
+const activeNote = ref(null)
+
+const handleNewActivation = (data)=>{
+    activeNote.value = data
 }
+
+const notes=ref([
+                {ID:1, Title:"this is a note title", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
+                {ID:2, Title:"this is a note title 2", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["two", "three"]},
+                {ID:3, Title:"this is a tripple note title", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
+                {ID:4, Title:"this is a title 4 a note", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
+                {ID:5, Title:"this is a galaxy note5 title", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
+                {ID:6, Title:"Six is a note title", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
+            ])
+
+
+const sortedNotes = computed(()=>{
+    if(notes.value!=null && notes.value.length>0){
+        const sorted = notes.value.sort((a,b)=>{return a.ID > b.ID ? -1 : 1})
+        if(!activeNote.value){
+            activeNote.value = sorted[0] 
+        }
+        return sorted
+    }else{
+        return []
+    }
+})
+
 </script>
 
+<style scoped>
+.hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+</style>
