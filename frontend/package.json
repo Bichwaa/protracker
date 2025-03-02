@@ -15,7 +15,8 @@
     "reflect-metadata": "^0.1.13",
     "vue": "^3.2.41",
     "vue-chartjs": "^5.2.0",
-    "vue-router": "^4.1.5"
+    "vue-router": "^4.1.5",
+    "vue-tailwind-wysiwyg-editor": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",

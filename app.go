@@ -110,3 +110,23 @@ func (c *App) DeleteTask(id uint) error {
 func (c *App) MarkTaskAsCompleted(id uint) error {
 	return controllers.MarkTaskAsCompleted(&c.db, id)
 }
+
+func (c *App) CreateNote(payload models.Note) error {
+	return controllers.CreateNoteController(&c.db, payload)
+}
+
+func (c *App) FetchNotes() ([]models.Note, error) {
+	return controllers.GetNotesController(&c.db)
+}
+
+func (c *App) FetchNote(id uint) (models.Note, error) {
+	return controllers.GetNoteController(&c.db, id)
+}
+
+func (c *App) UpdateNote(nd models.NoteUpdateDTO) error {
+	return controllers.UpdateNoteController(&c.db, nd)
+}
+
+func (c *App) DeleteNote(id uint) error {
+	return controllers.DeleteNoteController(&c.db, id)
+}
