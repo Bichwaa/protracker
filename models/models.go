@@ -257,6 +257,7 @@ type Note struct {
 	gorm.Model
 	Title       string `gorm:"not null"`
 	Content     string `gorm:"type:text;not null"`
+	Tags        string `gorm:"default:'all'"`
 	ProjectID   uint
 	ObjectiveID uint
 	GoalID      uint
@@ -264,6 +265,8 @@ type Note struct {
 }
 
 type NoteUpdateDTO struct {
+	ID      uint
 	Title   string
 	Content string
+	Tags    string
 }
