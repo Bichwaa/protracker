@@ -17,7 +17,7 @@ func CreateNote(db *gorm.DB, noteData *Note) error {
 
 func GetNotes(db *gorm.DB) ([]Note, error) {
 	var notes []Note
-	cur := db.Preload("Notes").Find(&notes)
+	cur := db.Find(&notes)
 	if cur.Error != nil {
 		return nil, cur.Error
 	}
