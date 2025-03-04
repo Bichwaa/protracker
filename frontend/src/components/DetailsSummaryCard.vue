@@ -74,7 +74,6 @@ const avgProgress = computed(()=>{
         const total =  props.project.Objectives.reduce((acc, obj) => {
             return acc + obj.Progress;
         }, 0);
-        console.log("ttal", total)
         return total/props.project.Objectives.length
     }
 })
