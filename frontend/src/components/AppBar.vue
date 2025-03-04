@@ -12,6 +12,14 @@
             </router-link>
         </div>
         <div 
+            v-if="route.name=='Details'"
+            class="notes-wrapper pl-3 py-1 rounded-md bg-[#61325f2e] cursor-pointer"
+            >
+            <Squares2X2Icon  
+                class="h-6 w-6 text-royal"
+                />
+        </div>
+        <div 
             class="notes-wrapper pl-3 py-1 rounded-md"
             :class="route.name=='Notes'?'bg-[#61325f2e]':''"
             >
@@ -33,7 +41,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRoute } from "vue-router";
-import { HomeIcon, SunIcon, BookOpenIcon } from '@heroicons/vue/24/solid';
+import { HomeIcon, SunIcon, BookOpenIcon, Squares2X2Icon } from '@heroicons/vue/24/solid';
 
 const theme = ref("light");
 const route = useRoute();
