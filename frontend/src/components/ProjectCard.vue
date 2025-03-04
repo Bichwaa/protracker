@@ -48,7 +48,9 @@
         <div class="project-card__notes w-24">
             <router-link to="/notes" class="flex gap-2 my-2 items-center">
                 <BookOpenIcon class="text-royal w-4 h-4" />
-                <span class="note-text font-medium text-royal">0 Notes</span>
+                <span class="note-text font-medium text-royal">
+                    {{ project.Notes.length }} Note{{ project.Notes.length!=1?'s':'' }}
+                </span>
             </router-link>
         </div>
         <div class="progress w-full">
