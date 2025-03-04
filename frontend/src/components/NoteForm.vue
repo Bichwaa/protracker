@@ -8,28 +8,32 @@
             </div>
             <form method="post" id="objective-form" @submit.prevent="submitForm" v-if="objectiveForm" class="flex flex-col">
                 <div class="flex flex-col my-1">
-                    <label for="name">Title</label>
+                    <label for="Title">Title</label>
                     <input 
                         type="text" 
-                        v-model="objectiveData.Name" 
-                        name="Name" placeholder="Title" 
+                        v-model="noteData.Title" 
+                        name="Title" placeholder="Title" 
                         class="border border-[#490a47] rounded-sm p-1"
-                        @focus="errors.Name = ''"
+                        @focus="errors.Title = ''"
                         >
-                    <span class="text-sm text-red-500" v-if="errors.Name" >{{ errors.Name }}</span>
+                    <span class="text-sm text-red-500" v-if="errors.Title" >{{ errors.Title }}</span>
+                </div>
+                <div class="flex flex-col my-1">
+                    <label for="Tags">Tags</label>
+                    <input 
+                        ref="tagsInput"
+                        type="text" 
+                        v-model="noteData.Tags" 
+                        name="Tags" placeholder="Tags" 
+                        class="border border-[#490a47] rounded-sm p-1"
+                        @focus="errors.Tags = ''"
+                        >
+                    <span class="text-sm text-red-500" v-if="errors.Tags" >{{ errors.Tags }}</span>
                 </div>
                 <div class="flex flex-col my-1">
                     <label for="description">Content</label>
-                    <!-- <textarea 
-                        v-model="objectiveData.Description" 
-                        name="Description" 
-                        rows="7"
-                        placeholder="content" 
-                        class="border border-[#490a47] rounded-sm p-1"
-                        @focus="errors.Description = ''"
-                        /> -->
-                        <VueTailwindEditor @get-html="updateHtml" :width="730"/>
-                    <span class="text-sm text-red-500" v-if="errors.Description" >{{ errors.Description }}</span>
+                        <VueTailwindEditor @get-html="updateHtml" :width="inpWdt"/>
+                    <span class="text-sm text-red-500" v-if="errors.Content" >{{ errors.Content }}</span>
                 </div>
                 <button type="submit" class="mt-3 bg-[#490a47] disabled:bg-gray-200 text-white font-medium p-3 cursor-pointer grid place-content-center rounded-md" >
                     <span v-if="!loading"> {{ edit ?  'Update Note' : 'Create Note' }} </span>
@@ -41,9 +45,9 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, onMounted} from 'vue';
+import { ref, defineEmits, onMounted, computed} from 'vue';
 import { z } from "zod";
-import { useObjectiveController } from "../APIs/objective-controller";
+import { useNoteController } from "../APIs/note-controller";
 import Loader from './Loader.vue';
 import { VueTailwindEditor } from 'vue-tailwind-wysiwyg-editor';
 import 'vue-tailwind-wysiwyg-editor/dist/style.css'
@@ -57,25 +61,37 @@ const props = defineProps({
         type: Number,
         default:0
     },
-    objective : {
+    objectiveId:{
+        type: Number,
+        default:0
+    },
+    goalId:{
+        type: Number,
+        default:0
+    },
+    title : {
         type: Object,
         default: {
             ID:null,
             CreatedAt: null,
             UpdatedAt: null,
             DeletedAt:null,
-            Name:null,
-            // Tags:null,
-            BeginDate:null,
-            EstimatedEndDate:null,
-            Progress:null,
-            Description:null,
-            Overseer:null,
-            Goals:[],
-            Notes:[]
+            Title:null,
+            Tags:null,
+            Content:null
         }
     }
 });
+
+const tagsInput = ref(null)
+
+const inpWdt = computed(()=>{
+    if(tagsInput.value!=null){
+        return tagsInput.value.offsetWidth
+    }else{
+        return 0
+    }
+})
 
 const html = ref("")
 
@@ -85,7 +101,7 @@ const updateHtml = (val) => {
 
 const loading = ref(false)
 
-const emit = defineEmits(['modal-off', 'objective-created', 'objective-updated']);
+const emit = defineEmits(['modal-off', 'note-created', 'objective-updated']);
 
 const objectiveForm = ref(true);
 
@@ -94,33 +110,24 @@ const nullObjFields = {
             CreatedAt: null,
             UpdatedAt: null,
             DeletedAt:null,
-            Name:null,
-            BeginDate:null,
-            EstimatedEndDate:null,
-            Progress:null,
-            Description:null,
-            Overseer:null,
-            Goals:[],
-            Notes:[]
+            Title:null,
+            Tags:null,
+            Content:null
 }
 
-const objectiveData = ref(nullObjFields)
+const noteData = ref(nullObjFields)
 //validation Logic
 const projectschema = z.object({
             ID:z.number().int().optional(),
-            Name:z.string({message:"project must have name"}).nonempty(),
-            // Tags:z.string(),
-            EstimatedEndDate:z.string({message:'Expected date, received nothing'}).datetime().nonempty(), 
-            Description:z.string(),
-            Overseer:z.string(),
+            Title:z.string({message:"Note must have a title"}).nonempty(),
+            Tags:z.string(),
+            Content:z.string(),
 })
 
 const errors = ref({
-            Name:"",
+            Title:"",
             Tags:"",
-            EstimatedEndDate:"",
-            Description:"",
-            Overseer:""
+            Content:""
 })
 
 //End validation Logic
@@ -131,7 +138,7 @@ const bye = () => {
 
 const submitForm = async () => {
     loading.value = true;
-    const { createObjective, updateObjective } = useObjectiveController();
+    const { createNote, updateNote } = useNoteController();
     let form = document.getElementById('objective-form');
         const formItems = [...form];
         //from array of form items filter out the submit value 
@@ -140,7 +147,7 @@ const submitForm = async () => {
         //then turn them into an object
         const data = Object.fromEntries(keyVals);
         // console.log(data)
-        data.EstimatedEndDate = new Date(data.EstimatedEndDate).toJSON();
+        data.Content = html.value;
         const validation = projectschema.safeParse(data)
         if (!validation.success) {
             console.log('Form data:', validation);
@@ -154,22 +161,29 @@ const submitForm = async () => {
 
         }
     if(!props.edit && validation.success){
-        data.ProjectID = props.projectId;
-        await createObjective(data);
-        emit("objective-created");
+
+        if(props.projectId!=0){
+            data.ProjectID = props.projectId;
+        } else if(props.objectiveId!=0){
+            data.ObjectiveID = props.objectiveId;
+        } else if(props.goalId!=0){
+            data.GoalID = props.goalId;
+        }
+        await createNote(data);
+        emit("note-created");
     }else if(props.edit && validation.success){
-        data.ID = objectiveData.value.ID
-        await updateObjective(data);
+        data.ID = noteData.value.ID
+        await updateNote(data);
         // console.log(data)
         emit("objective-updated");
     }
 }
 
 onMounted(()=>{
-    objectiveData.value = nullObjFields
+    noteData.value = nullObjFields
     if(props.edit){
-        objectiveData.value = props.objective
-        objectiveData.value.EstimatedEndDate = new Date(props.objective.EstimatedEndDate).toISOString().substring(0, 16)
+        noteData.value = props.objective
+        noteData.value.EstimatedEndDate = new Date(props.objective.EstimatedEndDate).toISOString().substring(0, 16)
     }
 })
 
