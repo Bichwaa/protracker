@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { useNoteController } from '../APIs/project-controller.js'
+import { useNoteController } from '../APIs/note-controller.js'
 
 export const useNotesStore = defineStore('notes', () => {
   

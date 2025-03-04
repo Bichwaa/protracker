@@ -11,20 +11,21 @@
                     @new-activation="handleNewActivation"
                 />
             </div>
-            <div class="board__notes__current col-span-8 px-8">
+            <div class="board__notes__current col-span-8 px-8" v-if="activeNote">
                 <h3 class="font-medium text-lg">{{ activeNote.Title }}</h3>
-                <p>
-                    {{ activeNote.Content }}
-                </p>
+                <div v-html="activeNote.Content"></div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import NoteCard from './NoteCard.vue';
 import NotesTitleCard from './NotesTitleCard.vue';
+import { useNotesStore } from '../stores/notes';
+
+const noteStore = useNotesStore()
 
 const PLACEHOLDER_TEXT = `Lorem ipsum dolor sit amet consectetur adipisicing elit. 
                     Provident, assumenda temporibus incidunt adipisci reiciendis iure sit esse. 
@@ -51,19 +52,20 @@ const handleNewActivation = (data)=>{
     activeNote.value = data
 }
 
-const notes=ref([
-                {ID:1, Title:"this is a note title", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
-                {ID:2, Title:"this is a note title 2", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["two", "three"]},
-                {ID:3, Title:"this is a tripple note title", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
-                {ID:4, Title:"this is a title 4 a note", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
-                {ID:5, Title:"this is a galaxy note5 title", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
-                {ID:6, Title:"Six is a note title", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
-            ])
+// const notes=ref([
+//                 {ID:1, Title:"this is a note title", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
+//                 {ID:2, Title:"this is a note title 2", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["two", "three"]},
+//                 {ID:3, Title:"this is a tripple note title", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
+//                 {ID:4, Title:"this is a title 4 a note", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
+//                 {ID:5, Title:"this is a galaxy note5 title", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
+//                 {ID:6, Title:"Six is a note title", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
+//             ])
 
 
 const sortedNotes = computed(()=>{
-    if(notes.value!=null && notes.value.length>0){
-        const sorted = notes.value.sort((a,b)=>{return a.ID > b.ID ? -1 : 1})
+    const notes = noteStore.notes
+    if(notes.length>0){
+        const sorted = notes.sort((a,b)=>{return a.ID > b.ID ? -1 : 1})
         if(!activeNote.value){
             activeNote.value = sorted[0] 
         }
@@ -71,6 +73,10 @@ const sortedNotes = computed(()=>{
     }else{
         return []
     }
+})
+
+onMounted(async()=>{
+ await noteStore.getNotes()
 })
 
 </script>
