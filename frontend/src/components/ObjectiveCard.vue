@@ -125,7 +125,7 @@ const activate = ()=>{
 
 const handleClickOutside = (event)=> {
       // Check if the click event occurred outside the menu container
-      if (!menuContainer.value.contains(event.target)) {
+      if (menuContainer.value!=null && !menuContainer.value.contains(event.target)) {
         popupMenu.value = false;
       }
     }
