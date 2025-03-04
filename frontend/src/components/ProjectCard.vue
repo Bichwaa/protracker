@@ -24,7 +24,7 @@
                         </li>
                         <li class="cursor-pointer flex gap-4 items-center my-1 p-2">
                             <BookOpenIcon class="w-4 h-4"/>
-                            <span class="text-sm">Project Notes</span>
+                            <span class="text-sm" @click="openProjectNoteForm">Add Note</span>
                         </li>
                         <li class="cursor-pointer flex gap-4 items-center my-1 p-2" @click="editProjectClicked">
                             <PencilIcon class="w-3 h-3  text-black"/>
@@ -37,6 +37,13 @@
                     </ul>
                 </div>
             </div>
+        </div>
+        <div v-if="showNoteForm">
+            <NoteForm 
+                @modal-off="closeProjectNoteForm"
+                :projectId="project.ID"
+                @note-created="closeProjectNoteForm"
+            />
         </div>
         <div class="project-card__notes w-24">
             <router-link to="/notes" class="flex gap-2 my-2 items-center">
@@ -67,7 +74,7 @@ import {ref, computed} from 'vue';
 import {useProjectController} from "../APIs/project-controller";
 import {Bars3BottomRightIcon, PencilIcon, TrashIcon, BookOpenIcon,  EyeIcon } from '@heroicons/vue/24/solid';
 import Dialog from "./Dialog.vue";
-import ObjectiveForm from '../components/ObjectiveForm.vue'
+import NoteForm from '../components/NoteForm.vue'
 
     const props = defineProps(['project'])
 
@@ -77,6 +84,7 @@ import ObjectiveForm from '../components/ObjectiveForm.vue'
     ])
 
     const showDelete = ref(false)
+    const showNoteForm = ref(false)
     
     const r =  ref("no!")
     const popupMenu = ref(false) 
@@ -92,6 +100,14 @@ import ObjectiveForm from '../components/ObjectiveForm.vue'
       if (menuContainer.value !=null && !menuContainer.value.contains(event.target)) {
         popupMenu.value = false;
     }
+    }
+
+    const openProjectNoteForm = ()=>{
+        showNoteForm.value = true
+    }
+
+    const closeProjectNoteForm = ()=>{
+        showNoteForm.value = false;
     }
 
     const editProjectClicked = ()=>{

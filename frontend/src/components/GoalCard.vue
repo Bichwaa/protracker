@@ -23,6 +23,10 @@
                                 <span class="text-sm" @click="addTaskClicked">Add Task</span>
                             </router-link>
                         </li>
+                        <li class="cursor-pointer flex gap-4 items-center my-1 p-2">
+                            <BookOpenIcon class="w-4 h-4"/>
+                            <span class="text-sm" @click="openGoalNoteForm">Add Note</span>
+                        </li>
                         <li class="cursor-pointer flex gap-4 items-center my-1 p-2" @click="editGoalClicked">
                             <PencilIcon class="w-3 h-3  text-black"/>
                             <span class="text-sm text-black">Edit Goal</span>
@@ -34,6 +38,13 @@
                     </ul>
                 </div>
             </div>
+        </div>
+        <div v-if="showNoteForm">
+            <NoteForm 
+                @modal-off="closeGoalNoteForm"
+                :goalId="goal.ID"
+                @note-created="closeGoalNoteForm"
+            />
         </div>
         <div>
             <GoalForm
@@ -78,6 +89,8 @@ import Dialog from "./Dialog.vue";
 import TaskCard from './TaskCard.vue';
 import TaskForm from './TaskForm.vue';
 import GoalForm from '../components/GoalForm.vue'
+import NoteForm from '../components/NoteForm.vue'
+
 
     const props = defineProps(['goal'])
 
@@ -90,6 +103,7 @@ import GoalForm from '../components/GoalForm.vue'
     const menuContainer = ref(null);
     const GoalFormOn = ref(false);
     const TaskFormOn = ref(false);
+    const showNoteForm = ref(false)
     
     
     const handleClickOutside = (event)=> {
@@ -98,6 +112,15 @@ import GoalForm from '../components/GoalForm.vue'
         popupMenu.value = false;
       }
     }
+
+    const openGoalNoteForm = ()=>{
+        showNoteForm.value = true
+    }
+
+    const closeGoalNoteForm = ()=>{
+        showNoteForm.value = false;
+    }
+
 
     const toggleGoalFormOn = ()=>{
         GoalFormOn.value=true
