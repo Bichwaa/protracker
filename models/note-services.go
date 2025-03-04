@@ -24,6 +24,28 @@ func GetNotes(db *gorm.DB) ([]Note, error) {
 	return notes, nil
 }
 
+type QParam struct {
+	Name  string
+	Value interface{}
+}
+
+func FilterNotes(db *gorm.DB, p *QParam) ([]Note, error) {
+	fmt.Println("========================================>", p)
+	var notes []Note
+	if p.Name != "" {
+		cur := db.Where(fmt.Sprintf("%s = ?", p.Name), p.Value).Find(&notes)
+		if cur.Error != nil {
+			return nil, cur.Error
+		}
+	} else {
+		cur := db.Find(&notes)
+		if cur.Error != nil {
+			return nil, cur.Error
+		}
+	}
+	return notes, nil
+}
+
 func GetNote(db *gorm.DB, id uint) (Note, error) {
 	var note Note
 	note.ID = id

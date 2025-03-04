@@ -42,6 +42,8 @@ export function FetchTask(arg1:number):Promise<models.Task>;
 
 export function FetchTasks():Promise<Array<models.Task>>;
 
+export function FilterNotes(arg1:models.QParam):Promise<Array<models.Note>>;
+
 export function MarkTaskAsCompleted(arg1:number):Promise<void>;
 
 export function UpdateGoal(arg1:models.GoalUpdateDTO):Promise<void>;

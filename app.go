@@ -119,6 +119,10 @@ func (c *App) FetchNotes() ([]models.Note, error) {
 	return controllers.GetNotesController(&c.db)
 }
 
+func (c *App) FilterNotes(p *models.QParam) ([]models.Note, error) {
+	return controllers.FilterNotesController(&c.db, p)
+}
+
 func (c *App) FetchNote(id uint) (models.Note, error) {
 	return controllers.GetNoteController(&c.db, id)
 }

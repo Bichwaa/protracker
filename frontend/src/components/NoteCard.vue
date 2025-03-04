@@ -9,14 +9,17 @@
         <div class="note-card__body line-clamp-3 cursor-pointer" @click="activate" v-html="note.Content">
         </div>
         <div class="note-card__tags">
-            TAGS: &nbsp;
-            <a href="#">duh</a>
-            <a href="#">uh!</a>
+            TAGS:
+            <span> 
+                <a class="text-sm bg-gray-200 mx-1 rounded-xl px-2 py-1 cursor-pointer" v-for="tag in tagList">{{tag}}</a>
+            </span>
         </div>
     </div>
 </template>
 
 <script setup>
+
+import { computed } from 'vue'
 
 const props = defineProps({
     note:{
@@ -34,6 +37,15 @@ const emit = defineEmits(['new-activation'])
 const activate = ()=>{
  emit('new-activation', props.note)
 }
+
+const tagList = computed(()=>{
+        const tagString = props.note.Tags;
+        if(tagString && tagString.length>0){
+            return tagString.split(',')
+        }else {
+            return []
+        }
+    })
 
 </script>
 

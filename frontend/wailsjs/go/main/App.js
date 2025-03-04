@@ -82,6 +82,10 @@ export function FetchTasks() {
   return window['go']['main']['App']['FetchTasks']();
 }
 
+export function FilterNotes(arg1) {
+  return window['go']['main']['App']['FilterNotes'](arg1);
+}
+
 export function MarkTaskAsCompleted(arg1) {
   return window['go']['main']['App']['MarkTaskAsCompleted'](arg1);
 }

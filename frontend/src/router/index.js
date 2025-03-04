@@ -18,6 +18,21 @@ const routes = [
     path:"/notes",
     name:"Notes",
     component: Notes
+  },
+  {
+    path:"/notes/project/:projectId",
+    name:"ProjectNotes",
+    component: Notes
+  },
+  {
+    path:"/notes/objective/:objectiveId",
+    name:"ObjectiveNotes",
+    component: Notes
+  },
+  {
+    path:"/notes/goal/:goalId",
+    name:"GoalNotes",
+    component: Notes
   }
 ]
 

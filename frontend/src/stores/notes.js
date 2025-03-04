@@ -19,6 +19,12 @@ export const useNotesStore = defineStore('notes', () => {
     currentNote.value = await getOneNote(Number(id));
   }
 
+  async function filterNotesBy(param) {
+    const { filterNotes: fn } = useNoteController();
+    notes.value = await fn(param);
+    notesCache.value = notes.value;
+  }
+
   async function filterNotesByTag(tag) {
     notes.value = notesCache.value.filter(note => 
       note.Tags.toLowerCase().indexOf(tag.toLowerCase()) >= 0
@@ -29,5 +35,5 @@ export const useNotesStore = defineStore('notes', () => {
     notes.value = notesCache.value;
   }
 
-  return { notes, getNotes, getOneNote, currentNote, filterNotesByTag, resetFilters }
+  return { notes, getNotes, filterNotesBy, getOneNote, currentNote, filterNotesByTag, resetFilters }
 })

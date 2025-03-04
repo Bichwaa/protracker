@@ -13,6 +13,14 @@ func CreateNoteController(db *gorm.DB, n models.Note) error {
 	return nil
 }
 
+func FilterNotesController(db *gorm.DB, where *models.QParam) ([]models.Note, error) {
+	notes, err := models.FilterNotes(db, where)
+	if err != nil {
+		return nil, err
+	}
+	return notes, nil
+}
+
 func GetNotesController(db *gorm.DB) ([]models.Note, error) {
 	notes, err := models.GetNotes(db)
 	if err != nil {

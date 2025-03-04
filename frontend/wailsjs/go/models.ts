@@ -420,6 +420,20 @@ export namespace models {
 		    return a;
 		}
 	}
+	export class QParam {
+	    Name: string;
+	    Value: any;
+	
+	    static createFrom(source: any = {}) {
+	        return new QParam(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.Name = source["Name"];
+	        this.Value = source["Value"];
+	    }
+	}
 	
 	export class TaskUpdateDTO {
 	    ID: number;

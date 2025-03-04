@@ -66,9 +66,9 @@
             @deleted="deleteObjective" 
         />
         <div class="objective-card__notes w-24">
-            <router-link to="/notes" class="flex gap-2 my-2 items-center">
+            <router-link :to="{ name: 'ObjectiveNotes', params: { objectiveId: objective.ID }}" class="flex gap-2 my-2 items-center">
                 <BookOpenIcon class="text-royal w-4 h-4" />
-                <span class="note-text font-medium text-royal">0 Notes</span>
+                {{ objective.Notes!=null?objective.Notes.length:0 }} Note{{ objective.Notes ? objective.Notes.length!=1?'s':'' :'s' }}
             </router-link>
         </div>
         <div class="progress w-full">

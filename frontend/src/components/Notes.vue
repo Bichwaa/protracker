@@ -21,46 +21,20 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import NoteCard from './NoteCard.vue';
 import NotesTitleCard from './NotesTitleCard.vue';
 import { useNotesStore } from '../stores/notes';
 
 const noteStore = useNotesStore()
 
-const PLACEHOLDER_TEXT = `Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                    Provident, assumenda temporibus incidunt adipisci reiciendis iure sit esse. 
-                    Quasi voluptates excepturi quod quo pariatur repellat possimus qui voluptatum 
-                    laborum aliquid quaerat maiores aperiam explicabo enim voluptatibus, obcaecati 
-                    cupiditate! Consequuntur, eligendi amet reprehenderit id corporis et totam quam
-                    earum tempore fugiat, quia aliquam asperiores sequi. Perferendis quae hic 
-                    voluptate iste asperiores ratione architecto. Similique quisquam ad voluptatum
-                    quasi, nihil quod eius consectetur placeat eum nulla aliquid rerum quidem est. 
-                    Fugiat ipsum dolore tenetur voluptatum earum! Minima natus corporis maiores
-                    tenetur temporibus ipsa doloribus nesciunt officiis! Rerum ullam hic vel, 
-                    perspiciatis vitae ab ratione, vero illo atque odit veritatis cumque quae 
-                    dolorum voluptas ea nihil eveniet exercitationem at dolorem maxime facere a? 
-                    Dolore repudiandae modi, temporibus animi quisquam assumenda reprehenderit. 
-                    Laborum eum eius temporibus quaerat voluptas facere, ullam sed optio quos ab 
-                    error incidunt harum officia animi aliquid sit. Amet omnis, fugit nihil 
-                    blanditiis earum maxime! Suscipit sunt fuga a. Architecto placeat ea 
-                    necessitatibus numquam excepturi, facilis dolores, incidunt officiis ab 
-                    doloribus fugiat sed nulla vel itaque! Ratione nam, quas quibusdam magnam.`
+const route = useRoute()
 
 const activeNote = ref(null)
 
 const handleNewActivation = (data)=>{
     activeNote.value = data
 }
-
-// const notes=ref([
-//                 {ID:1, Title:"this is a note title", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
-//                 {ID:2, Title:"this is a note title 2", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["two", "three"]},
-//                 {ID:3, Title:"this is a tripple note title", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
-//                 {ID:4, Title:"this is a title 4 a note", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
-//                 {ID:5, Title:"this is a galaxy note5 title", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
-//                 {ID:6, Title:"Six is a note title", Content:PLACEHOLDER_TEXT.slice(0, Math.floor(Math.random()*PLACEHOLDER_TEXT.length)), tags:["one", "three"]},
-//             ])
-
 
 const sortedNotes = computed(()=>{
     const notes = noteStore.notes
@@ -76,7 +50,16 @@ const sortedNotes = computed(()=>{
 })
 
 onMounted(async()=>{
- await noteStore.getNotes()
+    if(route.name=="ProjectNotes"){
+        console.log(route.params)
+        await noteStore.filterNotesBy({Name:'project_id' ,Value: route.params.projectId})
+    }else if(route.name=="ObjectiveNotes"){
+        await noteStore.filterNotesBy({Name:'objective_id' ,Value: route.params.objectiveId})
+    }else if(route.name=="GoalNotes"){
+        await noteStore.filterNotesBy({Name:'goal_id' ,Value: route.params.goalId})
+    }else{
+        await noteStore.getNotes()
+    }
 })
 
 </script>

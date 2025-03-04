@@ -1,4 +1,4 @@
-import { CreateNote, FetchNote, FetchNotes, UpdateNote, DeleteNote } from '../../wailsjs/go/main/App.js'
+import { CreateNote, FetchNote, FetchNotes,FilterNotes, UpdateNote, DeleteNote } from '../../wailsjs/go/main/App.js'
 
 export function useNoteController() {
 
@@ -8,6 +8,10 @@ export function useNoteController() {
 
     async function getNotes() { 
         return await FetchNotes();
+    }
+
+    async function filterNotes(param){
+        return await FilterNotes(param)
     }
 
     async function deleteNote(noteId) {
@@ -22,5 +26,5 @@ export function useNoteController() {
         return FetchNote(noteId);
     }
 
-    return { createNote, getNotes, deleteNote, updateNote, getOneNote }
+    return { createNote, getNotes, deleteNote, updateNote, getOneNote, filterNotes }
 }

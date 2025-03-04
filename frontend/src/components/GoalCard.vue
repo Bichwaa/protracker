@@ -64,9 +64,9 @@
                 />
         </div>
         <div class="project-card__notes w-24">
-            <router-link to="/notes" class="flex gap-2 my-2 items-center">
+            <router-link :to="{name:'GoalNotes', params:{goalId:goal.ID}}" class="flex gap-2 my-2 items-center">
                 <BookOpenIcon class="text-royal w-4 h-4" />
-                <span class="note-text font-medium text-royal">0 Notes</span>
+                {{ goal.Notes!=null?goal.Notes.length:0 }} Note{{ goal.Notes ? goal.Notes.length!=1?'s':'' :'s' }}
             </router-link>
         </div>
         <div class="progress w-full relative z-0">
@@ -108,7 +108,7 @@ import NoteForm from '../components/NoteForm.vue'
     
     const handleClickOutside = (event)=> {
       // Check if the click event occurred outside the menu container
-      if (!menuContainer.value.contains(event.target)) {
+      if (menuContainer.value && !menuContainer.value.contains(event.target)) {
         popupMenu.value = false;
       }
     }

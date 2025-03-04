@@ -18,8 +18,8 @@ func CreateProject(db *gorm.DB, projectData *Project) error {
 func GetProjects(db *gorm.DB) ([]Project, error) {
 	var projects []Project
 	cur := db.Preload("Notes").Preload("Objectives", func(db *gorm.DB) *gorm.DB {
-		return db.Preload("Goals", func(db *gorm.DB) *gorm.DB {
-			return db.Preload("Tasks")
+		return db.Preload("Notes").Preload("Goals", func(db *gorm.DB) *gorm.DB {
+			return db.Preload("Tasks").Preload("Notes")
 		})
 	}).Find(&projects)
 	if cur.Error != nil {
@@ -32,8 +32,8 @@ func GetProject(db *gorm.DB, id uint) (Project, error) {
 	var project Project
 	project.ID = id
 	cur := db.Preload("Notes").Preload("Objectives", func(db *gorm.DB) *gorm.DB {
-		return db.Preload("Goals", func(db *gorm.DB) *gorm.DB {
-			return db.Preload("Tasks")
+		return db.Preload("Notes").Preload("Goals", func(db *gorm.DB) *gorm.DB {
+			return db.Preload("Tasks").Preload("Notes")
 		})
 	}).Find(&project, id)
 	if cur.Error != nil {
