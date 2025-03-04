@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import {ref, onMounted, computed} from 'vue';
+import {ref, onMounted, computed, watch} from 'vue';
 import { useRoute } from 'vue-router';
 import ObjectiveCard from './ObjectiveCard.vue';
 import ObjectiveTitleCard from './ObjectiveTitleCard.vue';
@@ -68,18 +68,30 @@ const sortedObjectives = computed(()=>{
     }
 })
 
-const currentObjectiveGoals = computed(()=>{
-    if(project.value.Objectives && project.value.Objectives.length>0){
-        const obje = project.value.Objectives.find((obj)=> obj.ID==activeObjectiveId.value);
-        if(obje.Goals != null){
-            return obje.Goals
-        }else{
-            return []
+const currentObjectiveGoals = computed(() => {
+    if (project.value.Objectives && project.value.Objectives.length > 0) {
+        const obje = project.value.Objectives.find((obj) => obj.ID == activeObjectiveId.value);
+        if (obje && obje.Goals != null) {
+            return obje.Goals;
+        } else {
+            return [];
         }
-    }else{
-        return []
+    } else {
+        return [];
     }
-})
+});
+
+// Watch for changes in project and update activeObjectiveId if necessary
+watch(project, (newProject) => {
+    if (newProject.Objectives && newProject.Objectives.length > 0) {
+        const obje = newProject.Objectives
+        .sort((a,b)=>{return a.ID > b.ID ? -1 : 1})
+        .find((obj) => obj.ID == activeObjectiveId.value);
+        if (!obje) {
+            activeObjectiveId.value = newProject.Objectives[0].ID; // Set to the first objective if current is not found
+        }
+    }
+});
 
 onMounted(async ()=>{
     await getProject()
