@@ -8,7 +8,12 @@
                     @change="handleTaskChecked"
                     :checked="task.Progress==100?true:false"
                 > 
-                <span class="text-sm cursor-pointer" @dblclick="updateTaskClicked">{{ task.Name }}</span>
+                <span class="text-sm cursor-pointer px-3" 
+                      @dblclick="updateTaskClicked" 
+                      :title="task.Name" 
+                      style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; display: block; max-width: 250px;">
+                    {{ task.Name }}
+                </span>
             </div>
             <span class="text-xl cursor-pointer text-red-300 hover:text-red-500 duration-300" @click="deleteSwitch">&times;</span>
         </div>
