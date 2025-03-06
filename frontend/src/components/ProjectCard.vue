@@ -42,7 +42,7 @@
             <NoteForm 
                 @modal-off="closeProjectNoteForm"
                 :projectId="project.ID"
-                @note-created="closeProjectNoteForm"
+                @note-created="handleProjectNoteCreated"
             />
         </div>
         <div class="project-card__notes w-24">
@@ -82,7 +82,7 @@ import NoteForm from '../components/NoteForm.vue'
 
     const emit = defineEmits([
         "project-deleted", "edit-clicked",
-        "tag-clicked",
+        "tag-clicked", "refresh"
     ])
 
     const showDelete = ref(false)
@@ -110,6 +110,11 @@ import NoteForm from '../components/NoteForm.vue'
 
     const closeProjectNoteForm = ()=>{
         showNoteForm.value = false;
+    }
+    
+    const handleProjectNoteCreated = () =>{
+        emit("refresh")
+        closeProjectNoteForm()
     }
 
     const editProjectClicked = ()=>{

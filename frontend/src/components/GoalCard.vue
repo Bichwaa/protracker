@@ -12,10 +12,10 @@
                 @deleted="deleteGoal"
             />
 
-            <div class="relative" ref="menuContainer">
+            <div class="relative z-10" ref="menuContainer">
                 <Bars3BottomRightIcon class="text-black w-6 h-6 cursor-pointer" @click="popupMenu= !popupMenu"/>
 
-                <div class="popout-menu absolute right-5 top-0 shadow-xl rounded-md w-44 bg-gloom p-2 z-50"  v-if="popupMenu" >
+                <div class="popout-menu absolute right-5 top-0 shadow-xl rounded-md w-44 bg-gloom p-2"  v-if="popupMenu" >
                     <ul class="flex flex-col">
                         <li class="cursor-pointer my-1 p-2">
                             <router-link :to="{name:'Details', params:{id:1}}"  class="flex gap-4 items-center ">
@@ -39,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div v-if="showNoteForm">
+        <div v-if="showNoteForm" class="z-50">
             <NoteForm 
                 @modal-off="closeGoalNoteForm"
                 :goalId="goal.ID"
@@ -55,7 +55,7 @@
             @goal-updated="handleGoalEdited"
             />
         </div>
-        <div>
+        <div class="-z-50">
             <TaskForm 
                 v-if="TaskFormOn"
                 :goalId="goal.ID" 
@@ -114,10 +114,12 @@ import NoteForm from '../components/NoteForm.vue'
     }
 
     const openGoalNoteForm = ()=>{
+        popupMenu.value = false;
         showNoteForm.value = true
     }
 
     const closeGoalNoteForm = ()=>{
+        emit("refresh")
         showNoteForm.value = false;
     }
 

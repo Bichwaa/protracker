@@ -135,6 +135,7 @@ const openObjectiveNoteForm = ()=>{
 }
 
 const closeObjectiveNoteForm = ()=>{
+    emit("objective-edited")
     showNoteForm.value = false;
 }
 

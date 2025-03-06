@@ -39,6 +39,7 @@
           @project-deleted="getProjects"
           @edit-clicked="openEditForm(project)"
           @tag-clicked="filterProjects"
+          @refresh="getProjects"
         />
         </template>
     </section>
