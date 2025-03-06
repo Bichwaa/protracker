@@ -11,7 +11,7 @@
                     @new-activation="handleNewActivation"
                 />
             </div>
-            <div class="board__notes__current col-span-8 px-8" v-if="activeNote">
+            <div class="board__notes__current col-span-8 px-8" v-if="activeNote!=null">
                 <h3 class="font-medium text-lg">{{ activeNote.Title }}</h3>
                 <div v-html="activeNote.Content"></div>
             </div>
@@ -40,11 +40,10 @@ const sortedNotes = computed(()=>{
     const notes = noteStore.notes
     if(notes.length>0){
         const sorted = notes.sort((a,b)=>{return a.ID > b.ID ? -1 : 1})
-        if(!activeNote.value){
-            activeNote.value = sorted[0] 
-        }
+        activeNote.value = sorted[0] 
         return sorted
     }else{
+        activeNote.value = null
         return []
     }
 })
