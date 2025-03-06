@@ -12,10 +12,10 @@
                 @deleted="deleteGoal"
             />
 
-            <div class="relative z-10" ref="menuContainer">
+            <div class="relative" ref="menuContainer">
                 <Bars3BottomRightIcon class="text-black w-6 h-6 cursor-pointer" @click="popupMenu= !popupMenu"/>
 
-                <div class="popout-menu absolute right-5 top-0 shadow-xl rounded-md w-44 bg-gloom p-2"  v-if="popupMenu" >
+                <div class="popout-menu absolute right-5 top-0 shadow-xl rounded-md w-44 bg-gloom p-2 z-10"  v-if="popupMenu" >
                     <ul class="flex flex-col">
                         <li class="cursor-pointer my-1 p-2">
                             <router-link :to="{name:'Details', params:{id:1}}"  class="flex gap-4 items-center ">
@@ -55,7 +55,7 @@
             @goal-updated="handleGoalEdited"
             />
         </div>
-        <div class="-z-50">
+        <div class="z-50">
             <TaskForm 
                 v-if="TaskFormOn"
                 :goalId="goal.ID" 
