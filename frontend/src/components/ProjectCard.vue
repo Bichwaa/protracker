@@ -59,8 +59,10 @@
             <progress max="100" v-bind:value="project.Progress" class="w-[80%]"></progress>
         </div>
         <div class="time"><span class="font-semibold">Age:</span> <span> {{timeLapsed.days}} Days | {{timeLapsed.hours}} Hours</span></div>
-        <div class="tags my-4">
-           <span> <a class="text-sm bg-gray-200 mx-1 rounded-xl px-2 py-1 cursor-pointer" v-for="tag in tagList" @click="tagClicked(tag)">{{tag}}</a></span>
+        <div class="my-4 gap-1 w-full">
+           <span class="flex items-center flex-wrap gap-1"> 
+            <a class="text-sm bg-gray-200 mx-1 rounded-xl px-2 py-1 cursor-pointer" v-for="tag in tagList" @click="tagClicked(tag)">{{tag}}</a>
+        </span>
         </div>
         <div class="descrption flex flex-col">
             <span class="font-semibold">Description:</span>
