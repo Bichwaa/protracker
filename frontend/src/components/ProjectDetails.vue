@@ -5,6 +5,13 @@
                 :projectId="project.ID"
                 @objective-created="getProject"
             />
+            <div>
+                <objective-filter
+                    @sort-by-created="sortsortObjectivesByCreated"
+                    @sort-by-updated="sortsortObjectivesByUpdated"
+                    @sort-by-progress="sortObjectivesByProgress"
+                />
+            </div>
             <objective-card 
                 v-for="obj in sortedObjectives" 
                 :objective="obj"  
@@ -32,7 +39,7 @@ import ObjectiveTitleCard from './ObjectiveTitleCard.vue';
 import DetailsSummaryCard from './DetailsSummaryCard.vue';
 import GoalCard from './GoalCard.vue';
 import {useProjectStore} from "../stores/project.js";
-import {useGoalController} from "../APIs/goal-controller.js";
+import ObjectiveFilter from './ObjectiveFilter.vue';
 
 const route = useRoute();
 
@@ -44,7 +51,6 @@ const activeObjectiveId = ref(0)
 
 const projectStore = useProjectStore();
 
-const {getGoals} = useGoalController()
 
 const handleNewActivation = (data)=>{
     //data is the objective ID
@@ -56,17 +62,47 @@ const getProject = async ()=>{
     await projectStore.getOneProject(projectId)
 }
 
-const sortedObjectives = computed(()=>{
-    if(project.value.Objectives!=null && project.value.Objectives.length>0){
-        const sorted = project.value.Objectives.sort((a,b)=>{return a.ID > b.ID ? -1 : 1})
-        if(activeObjectiveId.value==0){
-            activeObjectiveId.value = sorted[0].ID 
-        }
-        return sorted
-    }else{
-        return []
-    }
-})
+const sortedObjectives = ref([])
+
+// const sortedObjectives = computed({
+//     get() {
+//         if (project.value.Objectives != null && project.value.Objectives.length > 0) {
+//             const sorted = project.value.Objectives.sort((a, b) => { return a.ID > b.ID ? -1 : 1 });
+//             if (activeObjectiveId.value == 0) {
+//                 activeObjectiveId.value = sorted[0].ID;
+//             }
+//             return sorted;
+//         } else {
+//             return [];
+//         }
+//     },
+//     set(newObjectives) {
+//         // Assuming newObjectives is an array of objectives
+//         project.value.Objectives = newObjectives;
+//     }
+// })
+
+const sortsortObjectivesByCreated =()=>{
+    sortedObjectives.value = [
+        ...sortedObjectives.value.sort((a,b)=>{return a.CreatedAt > b.CreatedAt ? -1 : 1})
+    ]
+}
+
+
+const sortsortObjectivesByUpdated = ()=>{
+    sortedObjectives.value = [
+        ...sortedObjectives.value.sort((a,b)=>{ return a.UpdatedAt > b.UpdatedAt ? -1 : 1 })
+    ]
+}
+
+const sortObjectivesByProgress = ()=>{
+    sortedObjectives.value = [
+        ...sortedObjectives.value.sort((a,b)=>{return a.Progress > b.Progress ? -1 : 1})
+
+    ]
+}
+
+
 
 const currentObjectiveGoals = computed(() => {
     if (project.value.Objectives && project.value.Objectives.length > 0) {
@@ -95,6 +131,7 @@ watch(project, (newProject) => {
 
 onMounted(async ()=>{
     await getProject()
+    sortedObjectives.value = project.value.Objectives.sort((a, b) => { return a.ID > b.ID ? -1 : 1 })
 })
 </script>
 
