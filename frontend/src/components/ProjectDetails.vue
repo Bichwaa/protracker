@@ -58,29 +58,10 @@ activeObjectiveId.value = data
 }
 
 const getProject = async ()=>{
-    const projectId = route.params.id;
-    await projectStore.getOneProject(projectId)
+    await projectStore.getOneProject(route.params.id)
 }
 
 const sortedObjectives = ref([])
-
-// const sortedObjectives = computed({
-//     get() {
-//         if (project.value.Objectives != null && project.value.Objectives.length > 0) {
-//             const sorted = project.value.Objectives.sort((a, b) => { return a.ID > b.ID ? -1 : 1 });
-//             if (activeObjectiveId.value == 0) {
-//                 activeObjectiveId.value = sorted[0].ID;
-//             }
-//             return sorted;
-//         } else {
-//             return [];
-//         }
-//     },
-//     set(newObjectives) {
-//         // Assuming newObjectives is an array of objectives
-//         project.value.Objectives = newObjectives;
-//     }
-// })
 
 const sortsortObjectivesByCreated =()=>{
     sortedObjectives.value = [
@@ -131,7 +112,10 @@ watch(project, (newProject) => {
 
 onMounted(async ()=>{
     await getProject()
-    sortedObjectives.value = project.value.Objectives.sort((a, b) => { return a.ID > b.ID ? -1 : 1 })
+    if(sortedObjectives.value.length==0){
+        sortedObjectives.value = project.value.Objectives.sort((a, b) => { return a.ID > b.ID ? -1 : 1 })
+        activeObjectiveId.value = sortedObjectives.value[0].ID;
+    }
 })
 </script>
 

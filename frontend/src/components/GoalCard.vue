@@ -18,10 +18,8 @@
                 <div class="popout-menu absolute right-5 top-0 shadow-xl rounded-md w-44 bg-gloom p-2 z-10"  v-if="popupMenu" >
                     <ul class="flex flex-col">
                         <li class="cursor-pointer my-1 p-2">
-                            <router-link :to="{name:'Details', params:{id:1}}"  class="flex gap-4 items-center ">
-                                <PlusIcon class="w-3 h-3 text-black"/>
-                                <span class="text-sm" @click="addTaskClicked">Add Task</span>
-                            </router-link>
+                            <PlusIcon class="w-3 h-3 text-black"/>
+                            <span class="text-sm" @click="addTaskClicked">Add Task</span>
                         </li>
                         <li class="cursor-pointer flex gap-4 items-center my-1 p-2">
                             <BookOpenIcon class="w-4 h-4"/>
