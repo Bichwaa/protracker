@@ -27,13 +27,18 @@
                  />
         </div>
 
-        <div class="relative">
-            <Dialog 
-                v-if="showDelete"
+        <div >
+            <Modal 
+                v-if="showDelete" 
+                @close-modal="showDelete=false"
+                >
+                <Dialog 
                 entity="Task"  
                 @cancelled="showDelete=false"
                 @deleted="deleteTask"
             />
+            </Modal>
+            
         </div>
     </div>
 </template>
@@ -42,6 +47,7 @@
 import { ref } from 'vue';
 import TaskForm from './TaskForm.vue';
 import Dialog from "./Dialog.vue";
+import Modal from './DialogModal.vue';
 import { useTaskController } from '../APIs/task-controller.js';
 
 const props = defineProps({
